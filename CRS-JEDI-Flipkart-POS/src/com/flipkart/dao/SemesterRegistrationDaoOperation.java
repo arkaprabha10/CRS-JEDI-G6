@@ -13,7 +13,7 @@ import java.util.Objects;
 import com.flipkart.bean.Course;
 import com.flipkart.bean.Payment;
 import com.flipkart.bean.RegisteredCourses;
-import com.flipkart.exception.CourseNotFoundException;
+import com.flipkart.exception.*;
 import com.flipkart.utils.DBUtil;
 
 /**
@@ -52,7 +52,7 @@ public class SemesterRegistrationDaoOperation implements SemesterRegistrationDao
 	}
 
 	@Override
-	public boolean addCourse(int studentId, int semesterId, String courseId, boolean isPrimary) {
+	public boolean addCourse(int studentId, int semesterId, String courseId, boolean isPrimary) throws CourseNotFoundException, CourseSeatsUnavailableException, CourseExistsInCartException {
 
 		PreparedStatement stmt;
 		Course courseObj;
@@ -66,14 +66,11 @@ public class SemesterRegistrationDaoOperation implements SemesterRegistrationDao
 			}
 
 			if(courseObj.getAvailableSeats() <= 0) {
-//				throw exception for no seats
-//				to do : create an exception for this
+				throw new CourseSeatsUnavailableException(courseId);
 			}
 
 			if(checkRegisteredCourseExists(studentId, semesterId, courseId)) {
-//				throw exception for duplication
-// 				to do : create an exception for this
-				throw new Exception("Course already added to cart!");
+				throw new CourseExistsInCartException(courseId);
 			}
 
 			String query = "INSERT INTO registered_courses VALUES (?,?,?,?,?,?,?)";
@@ -93,11 +90,7 @@ public class SemesterRegistrationDaoOperation implements SemesterRegistrationDao
 			return true;
 
 		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (CourseNotFoundException e) {
-			System.out.println(e.getMessage());
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
+//			e.printStackTrace();
 		}
 
 		return false;
@@ -188,7 +181,7 @@ public class SemesterRegistrationDaoOperation implements SemesterRegistrationDao
 	}
 
 	@Override
-	public boolean dropCourse(int studentId, int semesterId, String courseId) {
+	public boolean dropCourse(int studentId, int semesterId, String courseId) throws CourseNotInCart, CourseNotFoundException {
 
 		PreparedStatement stmt;
 		Course courseObj;
@@ -202,9 +195,7 @@ public class SemesterRegistrationDaoOperation implements SemesterRegistrationDao
 			}
 
 			if(!checkRegisteredCourseExists(studentId, semesterId, courseId)) {
-//				throw exception for dropping not registered course
-// 				to do : create an exception for this
-				throw new Exception("Course not in cart.");
+				throw new CourseNotInCart(courseId);
 			}
 
 			String query = "DELETE FROM registered_courses WHERE student_id = ? AND course_id = ? AND semester_id = ?";
@@ -221,17 +212,13 @@ public class SemesterRegistrationDaoOperation implements SemesterRegistrationDao
 
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} catch (CourseNotFoundException e) {
-			System.out.println(e.getMessage());
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
 		}
 
 		return false;
 	}
 
 	@Override
-	public boolean finishRegistration(int studentId, int semesterId) {
+	public boolean finishRegistration(int studentId, int semesterId) throws InvalidSemesterRegistration{
 
 		PreparedStatement stmt;
 
@@ -266,7 +253,7 @@ public class SemesterRegistrationDaoOperation implements SemesterRegistrationDao
 			}
 
 			else {
-//				throw exception for invalid number of courses
+				throw new InvalidSemesterRegistration();
 			}
 
 		} catch (SQLException e) {
@@ -274,38 +261,6 @@ public class SemesterRegistrationDaoOperation implements SemesterRegistrationDao
 		}
 
 		return false;
-	}
-
-
-	@Override
-	public RegisteredCourses viewRegisteredCourses(int studentId, int semesterId) {
-
-		PreparedStatement stmt;
-		RegisteredCourses regCourses = null;
-
-		try {
-
-			String query = "SELECT * FROM registered_courses WHERE student_id = ? AND semester_id = ?";
-
-			stmt = conn.prepareStatement(query);
-			stmt.setInt(1, studentId);
-			stmt.setInt(2, semesterId);
-			ResultSet rs = stmt.executeQuery();
-
-			ArrayList<String> courseID = new ArrayList<>();
-
-			while(rs.next()) {
-				courseID.add(rs.getString("course_id"));
-			}
-			
-			regCourses = new RegisteredCourses(studentId, semesterId, courseID);
-
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return regCourses;
 	}
 
 	@Override

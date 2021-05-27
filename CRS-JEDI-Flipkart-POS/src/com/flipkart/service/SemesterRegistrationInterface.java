@@ -41,14 +41,6 @@ public interface SemesterRegistrationInterface {
 	public boolean dropCourse(int studentId, int semesterId, String courseId) throws CourseNotFoundException, CourseNotDeletedException ,StudentNotRegisteredException;
 	
 	/**
-	 * Method to view Courses registered by student 
-	 * @param studentId
-	 * @param semesterId 
-	 * @return list of student's registered courses
-	 */
-	public RegisteredCourses viewRegisteredCourses(int studentId, int semesterId) throws StudentNotRegisteredException;
-	
-	/**
 	 * Method to view all courses available
 	 * @return list of all courses with availbale seats
 	 */

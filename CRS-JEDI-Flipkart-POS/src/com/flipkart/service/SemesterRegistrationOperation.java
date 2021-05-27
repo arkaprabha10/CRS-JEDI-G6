@@ -70,12 +70,6 @@ public class SemesterRegistrationOperation implements SemesterRegistrationInterf
 	}
 
 	@Override
-	public RegisteredCourses viewRegisteredCourses(int studentId, int semesterId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public ArrayList<Course> viewAvailableCourses() {
 
 //		SemesterRegistrationDaoOperation srdo = new SemesterRegistrationDaoOperation();

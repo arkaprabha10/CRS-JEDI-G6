@@ -90,7 +90,7 @@ public class AdminDaoOperation implements AdminDaoInterface {
 			
 			PreparedStatement update_statement = connection.prepareStatement(SQLQueries.APPROVE_STUDENT(studentId, semesterId));
 			
-			update_statement .executeUpdate();
+			update_statement.executeUpdate();
 			
 		} catch (SQLException e) {
 			
@@ -332,11 +332,7 @@ public class AdminDaoOperation implements AdminDaoInterface {
 				
 		} catch (SQLException e) {
 			e.getMessage();
-			// TODO Auto-generated catch block
-//			e.printStackTrace();
 		}
-		
-		
 	}
 
 }

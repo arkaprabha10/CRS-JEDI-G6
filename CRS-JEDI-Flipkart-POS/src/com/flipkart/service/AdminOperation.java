@@ -56,23 +56,17 @@ public class AdminOperation implements AdminInterface {
 	AdminDaoInterface ado  =AdminDaoOperation.getInstance();
 
 	@Override
-	public void approveStudentRegistration(int studentId,int semesterId) throws FeesPendingException, StudentNotApprovedException {
+	public void approveStudentRegistration(int studentId,int semesterId) {
 		
 //		AdminDaoOperation ado1 = new AdminDaoOperation();
 		try {
 			ado.approveStudentRegistration(studentId,semesterId);
 		} catch (SQLException e) {
-			
-			// TODO Auto-generated catch block
-//			e.printStackTrace();
+
 		} catch (FeesPendingException e) {
 			System.out.println(e.getMessage());
-			// TODO Auto-generated catch block
-//			e.printStackTrace();
 		} catch (StudentNotApprovedException e) {
 			System.out.println(e.getMessage());
-			// TODO Auto-generated catch block
-//			e.printStackTrace();
 		}
 		
 	}
@@ -135,20 +129,17 @@ public class AdminOperation implements AdminInterface {
 	
 	@Override
 	public HashMap<String,ArrayList<Integer> > viewCourseStudentList(String courseID, int semester, Boolean viewAll) {
-		
-//		AdminDaoOperation ado1 = new AdminDaoOperation();
+
 		return ado.viewCourseStudentList(courseID,semester,viewAll);
 	}
 
 	@Override
-	public ReportCard generateReportCard(int studentID)
-			throws GradeNotAddedException, StudentNotApprovedException, FeesPendingException {
-		// TODO Auto-generated method stub
+	public ReportCard generateReportCard(int studentID) {
+
 		ReportCard R = new ReportCard();
 		try {
 			R= ado.generateReportCard(studentID);
 		} catch (SQLException | StudentNotApprovedException | GradeNotAddedException | FeesPendingException e) {
-			// TODO Auto-generated catch block
 //			e.printStackTrace();
 		}
 		return R;
@@ -165,8 +156,5 @@ public class AdminOperation implements AdminInterface {
 	@Override
 	public void approveStudentAccount(Integer studentID) {
 		ado.approveStudentAccount(studentID);
-		
 	}
-
-
 }
