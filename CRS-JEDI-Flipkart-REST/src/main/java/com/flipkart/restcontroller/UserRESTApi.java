@@ -3,8 +3,11 @@
  */
 package com.flipkart.restcontroller;
 
+import java.sql.SQLException;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -15,8 +18,11 @@ import javax.ws.rs.core.Response;
 
 import org.hibernate.validator.constraints.Email;
 
+import com.flipkart.bean.Student;
 import com.flipkart.bean.User;
+import com.flipkart.exception.UserAlreadyInUseException;
 import com.flipkart.exception.UserNotFoundException;
+import com.flipkart.service.StudentOperation;
 import com.flipkart.service.UserOperation;
 
 /**
@@ -32,22 +38,8 @@ public class UserRESTApi {
 	 * - Register a user - POST
 	 */
 	
-	@GET
-	@Path("/customerdetails")
-	@Produces(MediaType.APPLICATION_JSON)
-	public User getCustomerDetails() {
-		
-		// Call the service class here which will
-		// return the Java object and convert into JSON
-		// using REST API
-   
-		User customer = new User();
-		customer.setName("Nagpur");
-		customer.setUserID("1101");
-		customer.setPassword("Rutwij");
-		
-	   return customer;
-	}
+	StudentOperation so = new StudentOperation();
+	
 	
 	@POST
 	@Path("/login")
@@ -66,18 +58,6 @@ public class UserRESTApi {
 			
 			if(loggedIn)
 			{
-//				if(role.equals("student"))
-//				
-//				case STUDENT:
-//					int studentId=studentInterface.getStudentId(userId);
-//					boolean isApproved=studentInterface.isApproved(studentId);
-//					if(!isApproved)	
-//					{
-//						return Response.status(200).entity("Login unsuccessful! Student "+userId+" has not been approved by the administration!" ).build();
-//					}
-//					break;
-//					
-//				}
 				return Response.status(200).entity("Login successful").build();
 				
 			}
@@ -89,8 +69,32 @@ public class UserRESTApi {
 		catch (UserNotFoundException e) 
 		{
 			return Response.status(500).entity(e.getMessage()).build();
+		} catch (Exception e) {
+			return Response.status(500).entity(e.getMessage()).build();
 		}		
 		
 	}
 
+	@POST
+	@Path("/register")
+	@Consumes("application/json")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response RegisterUser(Student student) {
+		
+		 try {
+			so.addStudent(student.getUserID(), student.getName(), student.getPassword(), student.getDepartment(), student.getContactNumber(), student.getJoiningYear());
+		} catch (UserAlreadyInUseException e) {
+			return Response.status(500).entity(e.getMessage()).build();//			e.printStackTrace();
+		} catch (SQLException e) {
+			return Response.status(500).entity(e.getMessage()).build();//			e.printStackTrace();
+		}
+         
+		
+        String result = "Added student : " + student;
+		
+		
+		return Response.status(201).entity(result).build();
+		
+	}  
+	
 }

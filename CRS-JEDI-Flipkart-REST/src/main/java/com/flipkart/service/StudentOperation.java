@@ -21,7 +21,7 @@ public class StudentOperation implements StudentInterface {
 	private static volatile StudentOperation instance=null;
 	StudentDaoInterface SDO =StudentDaoOperation.getInstance();
 
-	private StudentOperation()
+	public StudentOperation()
 	{
 		
 	}

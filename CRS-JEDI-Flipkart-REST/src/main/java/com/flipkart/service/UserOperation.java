@@ -32,7 +32,7 @@ public class UserOperation implements UserInterface{
 
 	@Override
 
-	public boolean loginUser(String userID, String password, String role) throws UserNotFoundException {
+	public boolean loginUser(String userID, String password, String role) throws UserNotFoundException ,Exception{
 		
 		return userDao.loginUser(userID, password, role);
 	}

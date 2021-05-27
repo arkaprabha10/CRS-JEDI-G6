@@ -150,7 +150,7 @@ public class UserDaoOperation implements UserDaoInterface{
 	}
 
 	@Override
-	public boolean loginUser(String userID, String userPassword, String role) {
+	public boolean loginUser(String userID, String userPassword, String role) throws UserNotFoundException,Exception {
 
 		PreparedStatement queryStatement;
 
@@ -214,6 +214,7 @@ public class UserDaoOperation implements UserDaoInterface{
 					
 					if(!account_status)
 					{
+						
 						throw new Exception("Account Not Approved By Admin");
 						// TODO: ma
 					}
@@ -223,15 +224,19 @@ public class UserDaoOperation implements UserDaoInterface{
 			}
 
 
-		} catch (UserNotFoundException ex) {
-			System.out.println(ex.getMessage());
-		}
+		} 
+//		catch (UserNotFoundException ex) {
+//			System.out.println(ex.getMessage());
+//		}
 		catch (SQLException ex) {
 			ex.printStackTrace();
 		}
-		catch (Exception ex) {
-			System.out.println(ex.getMessage());
+		finally {
+			
 		}
+//		catch (Exception ex) {
+//			System.out.println(ex.getMessage());
+//		}
 
 		// throw exception on login failure
 		return false;
