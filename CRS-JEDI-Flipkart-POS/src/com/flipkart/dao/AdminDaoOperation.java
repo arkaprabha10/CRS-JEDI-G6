@@ -298,7 +298,9 @@ public class AdminDaoOperation implements AdminDaoInterface {
 			statement = connection.prepareStatement(SQLQueries.GET_PENDING_STUDENT);
 						
 			ResultSet rs = statement.executeQuery();
-			rs.next();
+			if(!rs.next()) {
+				logger.error("error here");
+			}
 			
 			do {
 				Student student = new Student();

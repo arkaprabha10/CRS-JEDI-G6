@@ -37,7 +37,7 @@ public class ProfessorClient {
                 System.out.println("Choose an option : ");
                 System.out.println("1 : View registered students");
                 System.out.println("2 : Add Grade");
-                System.out.println("3 : Show available courses");
+                System.out.println("3 : Show Registered courses");
                 System.out.println("4 : Register for a course");
                 System.out.println("5 : Logout");
                 System.out.println("=======================================");

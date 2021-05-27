@@ -199,7 +199,7 @@ public class AdminClient {
             //done : create professor obj, and add to db
 
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
         }
     }
 
@@ -292,7 +292,7 @@ public class AdminClient {
 			e.printStackTrace();
 		} catch (CourseNotDeletedException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println(e.getMessage());
 		}
         
         // to do : remove course from db
@@ -317,7 +317,7 @@ public class AdminClient {
 
             // to do : create course object, update course in db
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
         }
 
 
