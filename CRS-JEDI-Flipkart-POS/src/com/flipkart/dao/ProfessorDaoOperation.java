@@ -26,7 +26,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Dell
- *
+ *  Class to implement Professor Dao Operations
  */
 public class ProfessorDaoOperation implements ProfessorDaoInterface {
 
@@ -37,7 +37,7 @@ public class ProfessorDaoOperation implements ProfessorDaoInterface {
 	private ProfessorDaoOperation(){
 
 	}
-	
+//	Method to make ProfessorDaoOperation Singleton
 	public static ProfessorDaoOperation getInstance(){
 		if(instance==null)
 		{
@@ -48,6 +48,13 @@ public class ProfessorDaoOperation implements ProfessorDaoInterface {
 		return instance;
 	}
 
+	/**
+	 * Method to Grade a Student using SQL commands
+	 * @param studentID
+	 * @param courseID
+	 * @param grade
+	 * @throws GradeNotAddedException,StudentNotRegisteredException
+	 */
 
 	@Override
 	public void addGrade(Integer studentID, Integer semesterID, String courseID, Integer grade) throws GradeNotAddedException,StudentNotRegisteredException {
@@ -55,10 +62,9 @@ public class ProfessorDaoOperation implements ProfessorDaoInterface {
 		Connection connection=DBUtil.getConnection();
 		try 
 		{
-	String queryStr;
+	
 			PreparedStatement stmt;
 
-//			String query = "SELECT is_approved from registered_courses WHERE student_id = ? AND course_id = ? AND semester_id = ?";
 			PreparedStatement checkStmt = connection.prepareStatement(SQLQueries.CHECK_COURSE_VALIDITY(studentID, semesterID, courseID));
 			checkStmt.setInt(1, studentID);
 			checkStmt.setString(2, courseID);
@@ -74,7 +80,6 @@ public class ProfessorDaoOperation implements ProfessorDaoInterface {
 				
 			}
 			else {
-//				queryStr = "UPDATE registered_courses SET grade = ? WHERE student_id = ? AND course_id = ? AND semester_id = ?";
 				stmt = connection.prepareStatement(SQLQueries.ADD_GRADE(studentID, semesterID, courseID, grade));
 		    	stmt.setInt(1, grade);
 				stmt.setInt(2, studentID);
@@ -98,14 +103,17 @@ public class ProfessorDaoOperation implements ProfessorDaoInterface {
 			}
 	}
 			
-	
+	/**
+	 * Method to View student details for students who are registered in a particular course
+	 * @param professorID
+	 * @return the enrolled students for the corresponding professor and course code.
+	 * @throws NoStudentInCourseException
+	 */
 
 	@Override
 	public ArrayList<RegisteredCourses> viewCourseStudents(String courseID, Integer semesterID) throws NoStudentInCourseException{
-		// TODO Auto-generated method stub
 		Connection connection=DBUtil.getConnection();
 		try {
-//			String sql = "SELECT * FROM registered_courses WHERE course_id = ? AND semester_id = ?" ;
 			PreparedStatement stmt = connection.prepareStatement(SQLQueries.VIEW_REGISTERED_STUDENTS(courseID, semesterID));
 			stmt.setString(1, courseID);
 			stmt.setInt(2, semesterID);
@@ -136,6 +144,12 @@ public class ProfessorDaoOperation implements ProfessorDaoInterface {
 		return null;
 	}
 
+	/**
+	 * Method to view courses which the professor is associated with
+	 * @param instructorID
+	 * @return the enrolled students for the corresponding professor and course code.
+	 * @throws ProfessorNotAssignedException
+	 */
 	@Override
 	public ArrayList<Course> viewCourseProf(Integer instructorID) throws ProfessorNotAssignedException {
 
@@ -143,7 +157,6 @@ public class ProfessorDaoOperation implements ProfessorDaoInterface {
 		Connection connection=DBUtil.getConnection();
 		try {
 			
-			String sql = "SELECT * FROM course_catalog WHERE instructor = ?";
 			PreparedStatement stmt = connection.prepareStatement(SQLQueries.VIEW_ASSOCIATED_PROFESSOR(instructorID));
 
 			stmt.setInt(1, instructorID);
@@ -169,6 +182,14 @@ public class ProfessorDaoOperation implements ProfessorDaoInterface {
 		return ans;
 	}
 
+	/**
+	 * Method for Professor to register for a course if no one is allocated to it
+	 * @param instructorID
+	 * @param semesterID
+	 * @param courseID
+	 * @return true if Successfully registered else false
+	 * @throws ProfessorCourseRegistrationException
+	 */
 	@Override
 	public Boolean registerCourse(Integer instructorID, Integer semesterID, String courseID) throws ProfessorCourseRegistrationException{
 		
@@ -211,6 +232,12 @@ public class ProfessorDaoOperation implements ProfessorDaoInterface {
 		}
 	}
 
+	/**
+	 * Method to find professor ID via his username
+	 * @param username
+	 * @return instructor id
+	 * @throws ProfessorNotRegisteredException
+	 */
 	public int getProfessorIDFromUserName(String username) throws ProfessorNotRegisteredException  {
 
 		int professorID = -1;
@@ -219,7 +246,6 @@ public class ProfessorDaoOperation implements ProfessorDaoInterface {
 
 		try
 		{			
-//			String Qry = "select * from professor where user_name = ?";
 			PreparedStatement preparedStatement = connection.prepareStatement(SQLQueries.VIEW_PROFESSOR_ID(username));
 			preparedStatement.setString(1, username);
 			ResultSet results=preparedStatement.executeQuery();
