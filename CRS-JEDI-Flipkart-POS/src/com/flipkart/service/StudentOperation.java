@@ -9,19 +9,14 @@ import com.flipkart.bean.ReportCard;
 import com.flipkart.bean.Student;
 import com.flipkart.dao.StudentDaoInterface;
 import com.flipkart.dao.StudentDaoOperation;
-import com.flipkart.exception.FeesPendingException;
-import com.flipkart.exception.GradeNotAddedException;
-import com.flipkart.exception.StudentNotApproved;
-import com.flipkart.exception.StudentNotApprovedException;
-import com.flipkart.exception.StudentNotRegisteredException;
-import com.flipkart.exception.UserAlreadyInUseException;
+import com.flipkart.exception.*;
 
 public class StudentOperation implements StudentInterface {
 	
 	private static volatile StudentOperation instance=null;
 	StudentDaoInterface SDO =StudentDaoOperation.getInstance();
 
-	private StudentOperation()
+	public StudentOperation()
 	{
 		
 	}
@@ -45,7 +40,7 @@ public class StudentOperation implements StudentInterface {
 	public ReportCard viewReportCard(int StudentID, int semesterId)  {
 
 		ReportCard R = new ReportCard();
-//		StudentDaoOperation SDO= new StudentDaoOperation();
+
 		try {
 			R = SDO.viewReportCard(StudentID,semesterId);
 			System.out.println("StudentID : "+R.getStudentID()+"\t SemesterID : "+R.getSemesterID());
@@ -53,12 +48,16 @@ public class StudentOperation implements StudentInterface {
 	    	R.getGrades().forEach((key, value) -> {
 	    		System.out.println(key + "    " + value);
 	    		});
-		} catch (SQLException | GradeNotAddedException | StudentNotApprovedException | FeesPendingException e) {
-			// TODO Auto-generated catch block
+		} catch (ReportCardNotGeneratedException | GradeNotAddedException | StudentNotApprovedException | FeesPendingException e) {
 			System.out.println(e.getMessage());
 		}
+		catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+
 		ReportCardOperation report = new ReportCardOperation();
 		R.setSpi(report.getSPI(R));
+
 		return R;
 	}
 

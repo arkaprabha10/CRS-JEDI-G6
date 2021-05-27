@@ -25,7 +25,7 @@ public interface SemesterRegistrationDaoInterface {
 	 * @param courseId
 	 * @return the course if it is added successfully, else null
 	 */
-	public boolean addCourse(int studentId, int semesterId, String courseId, boolean isPrimary) throws SQLException, CourseNotFoundException, CourseSeatsUnavailableException, CourseExistsInCartException;
+	public boolean addCourse(int studentId, int semesterId, String courseId, boolean isPrimary) throws CourseNotFoundException, CourseSeatsUnavailableException, CourseExistsInCartException;
 	
 	/**
 	 * Method to drop Course selected by student 
@@ -34,7 +34,7 @@ public interface SemesterRegistrationDaoInterface {
 	 * @param courseId 
 	 * @return Boolean value indicating if it is was dropped successfully
 	 */
-	public boolean dropCourse(int studentId, int semesterId, String courseId) throws SQLException, CourseNotInCart, CourseNotFoundException;
+	public boolean dropCourse(int studentId, int semesterId, String courseId) throws CourseNotInCart, CourseNotFoundException;
 
 	/**
 	 * @param studentId
@@ -42,32 +42,11 @@ public interface SemesterRegistrationDaoInterface {
 	 * @return
 	 * @throws SQLException
 	 */
-	public boolean finishRegistration(int studentId, int semesterId) throws SQLException, InvalidSemesterRegistration;
+	public boolean finishRegistration(int studentId, int semesterId) throws InvalidSemesterRegistration;
 	
 	/**
 	 * Method to view all courses available
 	 * @return list of all courses with availbale seats
 	 */
-	public ArrayList<Course> viewAvailableCourses() throws SQLException;
-	
-	
-	/**
-	 * Method to calculate student Fees
-	 * @param studentId
-	 * @param semesterId
-	 * @return total fees to be paid by the student
-	 */
-	public int calculateFees(int studentId, int semesterId) ;
-	
-	
-	/**
-	 * Method to pay student Fees
-	 * @param studentId
-	 * @param semesterId
-	 * @param paymentMode 
-	 * @return Boolean value indicating if payment was successful
-	 */
-	public Payment payFees(int studentId, int semesterId, String paymentMode) throws SQLException ;
-	
-	
+	public ArrayList<Course> viewAvailableCourses();
 }

@@ -32,16 +32,16 @@ public interface AdminDaoInterface {
 	 * @throws FeesPendingException 
 	 * @throws StudentNotApprovedException 
 	 */
-	public void approveStudentRegistration(int studentId,int semesterId) throws SQLException, FeesPendingException, StudentNotApprovedException;	
+	public void approveStudentRegistration(int studentId,int semesterId) throws FeesPendingException, StudentNotApprovedException;
 	/**
 	 * @param professor
 	 */
-	public void addProfessor(Professor professor) throws SQLException;
+	public void addProfessor(Professor professor);
 	
 	/**
 	 * @param professor
 	 */
-	public void removeProfessor(int professorID) throws SQLException;
+	public void removeProfessor(int professorID);
 	
 	/**
 	 * @param studentID
@@ -50,19 +50,19 @@ public interface AdminDaoInterface {
 	 * @throws FeesPendingException 
 	 * @throws GradeNotAddedException 
 	 */
-	public ReportCard generateReportCard(int studentID) throws SQLException, StudentNotApprovedException, GradeNotAddedException, FeesPendingException;
+	public ReportCard generateReportCard(int studentID) throws StudentNotApprovedException;
 	
 	/**
 	 * @param courseID
 	 * @param courseCatalog
 	 */
-	public void removeCourse(String courseID) throws SQLException;
+	public void removeCourse(String courseID);
 	
 	/**
 	 * @param courseID
 	 * @param courseCatalog
 	 */
-	public void addCourse(Course course) throws SQLException;
+	public void addCourse(Course course);
 	
 	public HashMap<String, ArrayList<Integer>> viewCourseStudentList(String courseID, int semesterId, Boolean viewAll);
 	

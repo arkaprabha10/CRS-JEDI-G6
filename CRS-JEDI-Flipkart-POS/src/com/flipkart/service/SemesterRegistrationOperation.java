@@ -3,6 +3,7 @@
  */
 package com.flipkart.service;
 
+import java.sql.Array;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,9 @@ import com.flipkart.bean.RegisteredCourses;
 import com.flipkart.bean.SemesterRegistration;
 import com.flipkart.dao.SemesterRegistrationDaoInterface;
 import com.flipkart.dao.SemesterRegistrationDaoOperation;
+import com.flipkart.exception.*;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 /**
  * @author Asus
@@ -21,7 +25,7 @@ import com.flipkart.dao.SemesterRegistrationDaoOperation;
 public class SemesterRegistrationOperation implements SemesterRegistrationInterface{
 	
 	private static volatile SemesterRegistrationOperation instance = null;
-	
+	private static final Logger logger = LogManager.getLogger(SemesterRegistration.class);
 	SemesterRegistrationDaoInterface srdo = SemesterRegistrationDaoOperation.getInstance();
 
 	private SemesterRegistrationOperation() {
@@ -44,13 +48,12 @@ public class SemesterRegistrationOperation implements SemesterRegistrationInterf
 	@Override
 	public boolean addCourse(int studentId, int semesterId, String courseId, boolean isPrimary) {
 
-//		SemesterRegistrationDaoOperation srdo = new SemesterRegistrationDaoOperation();
-
 		try {
+
 			return srdo.addCourse(studentId, semesterId, courseId, isPrimary);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+		} catch (CourseNotFoundException | CourseSeatsUnavailableException | CourseExistsInCartException e) {
+			logger.error(e.getMessage());
 		}
 		return false;
 	}
@@ -58,13 +61,12 @@ public class SemesterRegistrationOperation implements SemesterRegistrationInterf
 	@Override
 	public boolean dropCourse(int studentId, int semesterId, String courseId) {
 
-//		SemesterRegistrationDaoOperation srdo = new SemesterRegistrationDaoOperation();
-
 		try {
+
 			return srdo.dropCourse(studentId, semesterId, courseId);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+		} catch (CourseNotFoundException | CourseNotInCart e) {
+			logger.error(e.getMessage());
 		}
 		return false;
 	}
@@ -72,40 +74,31 @@ public class SemesterRegistrationOperation implements SemesterRegistrationInterf
 	@Override
 	public ArrayList<Course> viewAvailableCourses() {
 
-//		SemesterRegistrationDaoOperation srdo = new SemesterRegistrationDaoOperation();
-
 		try {
+
+			ArrayList<Course> courseCatalog = srdo.viewAvailableCourses();
+			if(courseCatalog == null) {
+				throw new Exception("Error encountered while retrieving course catalog");
+			}
+
 			return srdo.viewAvailableCourses();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
 		return null;
-	}
-
-	@Override
-	public int calculateFees(int studentId, int semesterId) {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 
 	@Override
 	public boolean finishRegistration(int studentId, int semesterId) {
-//		SemesterRegistrationDaoOperation srdo = new SemesterRegistrationDaoOperation();
 
 		try {
+
 			return srdo.finishRegistration(studentId, semesterId);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+		} catch (InvalidSemesterRegistration e) {
+			logger.error(e.getMessage());
 		}
 		return false;
 	}
-
-	@Override
-	public Payment payFees(int studentId, int semesterId, String paymentMode) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

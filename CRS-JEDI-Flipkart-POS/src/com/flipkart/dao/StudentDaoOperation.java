@@ -86,7 +86,7 @@ public class StudentDaoOperation implements StudentDaoInterface {
 	}
 
 	@Override
-	public ReportCard viewReportCard(int StudentID, int semesterId) throws SQLException, GradeNotAddedException , StudentNotApprovedException, FeesPendingException{
+	public ReportCard viewReportCard(int StudentID, int semesterId) throws ReportCardNotGeneratedException, GradeNotAddedException , StudentNotApprovedException, FeesPendingException{
 		Connection connection=DBUtil.getConnection();
 		
 		ReportCard R = new ReportCard();
@@ -117,14 +117,11 @@ public class StudentDaoOperation implements StudentDaoInterface {
 					grades.put(rs.getString(2), rs.getInt(4));
 				}
 			}
-			if(grades.isEmpty()) throw new Exception("Report card not generated");
+			if(grades.isEmpty()) throw new ReportCardNotGeneratedException();
 			R.setIsVisible(true);
 			R.setGrades(grades);
 				
-		}
-			
-		catch(Exception ex)
-		{
+		} catch(SQLException ex) {
 			System.out.println(ex.getMessage());
 		}
 

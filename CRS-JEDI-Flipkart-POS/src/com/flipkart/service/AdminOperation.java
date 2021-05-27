@@ -8,20 +8,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.flipkart.bean.*;
 import com.flipkart.dao.AdminDaoInterface;
 import com.flipkart.dao.AdminDaoOperation;
-import com.flipkart.exception.CourseNotFoundException;
-import com.flipkart.exception.FeesPendingException;
-import com.flipkart.exception.GradeNotAddedException;
-import com.flipkart.exception.UserAlreadyInUseException;
-import com.flipkart.exception.UserNotFoundException;
-import com.flipkart.exception.ProfessorNotAddedException;
-import com.flipkart.exception.StudentNotApprovedException;
+import com.flipkart.exception.*;
 
-import com.flipkart.bean.Course;
-import com.flipkart.bean.Professor;
-import com.flipkart.bean.ReportCard;
-import com.flipkart.bean.Student;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 /**
  * @author rutwi
@@ -29,9 +22,9 @@ import com.flipkart.bean.Student;
  */
 
 public class AdminOperation implements AdminInterface {
-	
-//	AdminDaoOperation ado = new AdminDaoOperation();
+
 	private static volatile AdminOperation instance = null;
+	private static final Logger logger = LogManager.getLogger(AdminOperation.class);
 	
 	private AdminOperation()
 	{
@@ -53,59 +46,36 @@ public class AdminOperation implements AdminInterface {
 	}
 	
 
-	AdminDaoInterface ado  =AdminDaoOperation.getInstance();
+	AdminDaoInterface ado  = AdminDaoOperation.getInstance();
 
 	@Override
 	public void approveStudentRegistration(int studentId,int semesterId) {
-		
-//		AdminDaoOperation ado1 = new AdminDaoOperation();
+
 		try {
 			ado.approveStudentRegistration(studentId,semesterId);
-		} catch (SQLException e) {
-
-		} catch (FeesPendingException e) {
-			System.out.println(e.getMessage());
-		} catch (StudentNotApprovedException e) {
-			System.out.println(e.getMessage());
+		} catch (FeesPendingException | StudentNotApprovedException e) {
+			logger.error(e.getMessage());
 		}
-		
 	}
 
 	@Override
 	public void addProfessor(Professor professor) {
-		
-		try {
-			ado.addProfessor(professor);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+
+		ado.addProfessor(professor);
+
 	}
 
 	@Override
 	public void removeProfessor(int professorID) {
-		// TODO Auto-generated method stub
-		try {
-			ado.removeProfessor(professorID);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+
+		ado.removeProfessor(professorID);
 	}
 
 
 	@Override
 	public void removeCourse(String courseID) {
-		// TODO Auto-generated method stub
-		try {
-			ado.removeCourse(courseID);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+
+		ado.removeCourse(courseID);
 	}
 
 	@Override
@@ -116,14 +86,9 @@ public class AdminOperation implements AdminInterface {
 		newCourse.setCourseID(courseID);
 		newCourse.setOfferedSemester(semester);
 		newCourse.setAvailableSeats(10);
-		
-		try {
-			ado.addCourse(newCourse);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+
+		ado.addCourse(newCourse);
+
 	}
 
 	
@@ -138,9 +103,11 @@ public class AdminOperation implements AdminInterface {
 
 		ReportCard R = new ReportCard();
 		try {
+
 			R= ado.generateReportCard(studentID);
-		} catch (SQLException | StudentNotApprovedException | GradeNotAddedException | FeesPendingException e) {
-//			e.printStackTrace();
+
+		} catch (StudentNotApprovedException e) {
+			logger.error(e.getMessage());
 		}
 		return R;
 	}

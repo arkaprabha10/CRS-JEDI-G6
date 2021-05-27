@@ -8,8 +8,8 @@ import com.flipkart.service.StudentOperation;
 import com.flipkart.service.UserOperation;
 
 public class UserClient {
+
     private Scanner sc = new Scanner(System.in);
-    
     StudentOperation so = StudentOperation.getInstance();
     
 
