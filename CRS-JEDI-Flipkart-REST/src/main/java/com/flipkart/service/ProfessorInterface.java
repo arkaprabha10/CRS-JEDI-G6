@@ -31,10 +31,11 @@ public interface ProfessorInterface {
 	/**
 	 * @param courseID
 	 * @param semesterID
+	 * @return 
 	 * @throws CourseNotFoundException
 	 */
-	public void viewCourseStudents(String courseID, Integer semesterID) throws CourseNotFoundException;
-	public void viewCourseProf(int instructorID) ;
+	public ArrayList<RegisteredCourses> viewCourseStudents(String courseID, Integer semesterID) throws CourseNotFoundException;
+	public ArrayList<Course> viewCourseProf(int instructorID) ;
 	public void registerCourse(int instructorID, Integer semesterID, String courseID) throws SQLException;
 	
 	

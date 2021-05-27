@@ -47,7 +47,7 @@ public interface StudentInterface {
 	 * @return course list
 	 * @throws SQLException 
 	 */
-	public void viewRegisteredCourses(int studentID, int semesterId) throws StudentNotRegisteredException, SQLException;
+	public List<Course> viewRegisteredCourses(int studentID, int semesterId) throws StudentNotRegisteredException, SQLException;
 	
 	
 

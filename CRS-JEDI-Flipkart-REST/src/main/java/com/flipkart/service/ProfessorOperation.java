@@ -61,7 +61,7 @@ public class ProfessorOperation implements ProfessorInterface {
 
 	//view student details who have registered for a particular course
 	@Override
-	public void viewCourseStudents(String courseID, Integer semesterID)throws CourseNotFoundException {
+	public ArrayList<RegisteredCourses> viewCourseStudents(String courseID, Integer semesterID)throws CourseNotFoundException {
 		
 		ArrayList<RegisteredCourses>ans = new ArrayList<RegisteredCourses>();
 		
@@ -76,11 +76,13 @@ public class ProfessorOperation implements ProfessorInterface {
 		catch(Exception e) {
 			throw new CourseNotFoundException(courseID);
 		}
+		
+		return ans;
 	}
 
 	//view course details which the professor is associated with
 	@Override
-	public void viewCourseProf(int instructorID) {
+	public ArrayList<Course> viewCourseProf(int instructorID) {
 	
 		ArrayList<Course>ans = new ArrayList<Course>();
 		try {
@@ -95,6 +97,8 @@ public class ProfessorOperation implements ProfessorInterface {
 		catch(Exception e) {
 			e.printStackTrace();
 		}
+		return ans;
+				
 		
 	}
 

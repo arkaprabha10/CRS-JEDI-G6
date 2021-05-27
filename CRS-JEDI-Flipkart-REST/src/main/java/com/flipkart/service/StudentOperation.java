@@ -63,7 +63,7 @@ public class StudentOperation implements StudentInterface {
 	}
 
 	@Override
-	public void viewRegisteredCourses(int studentID, int semesterId) {
+	public List<Course> viewRegisteredCourses(int studentID, int semesterId) {
 
 		try {
 			List<Course> courses = SDO.viewRegisteredCourses(studentID,semesterId);
@@ -85,10 +85,13 @@ public class StudentOperation implements StudentInterface {
 				}
 			}
 			System.out.println("=======================================");
+			return courses;
 
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
+		return null;
+		
 	}
 
 	@Override
