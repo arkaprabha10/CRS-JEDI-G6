@@ -10,6 +10,7 @@ import java.util.List;
 import com.flipkart.bean.Course;
 import com.flipkart.bean.ReportCard;
 import com.flipkart.bean.Student;
+
 import com.flipkart.exception.*;
 
 /**
@@ -26,7 +27,9 @@ public interface StudentDaoInterface {
 	 * @throws FeesPendingException 
 	 * @throws StudentNotApprovedException 
 	 */
-	public ReportCard viewReportCard(int StudentID, int semesterId) throws SQLException, GradeNotAddedException, StudentNotApprovedException, FeesPendingException, ReportCardNotGeneratedException;
+
+	public ReportCard viewReportCard(int StudentID, int semesterId) throws SQLException, GradeNotAddedException, StudentNotApprovedException, FeesPendingException, ReportCardNotGeneratedException, ReportCardNotGeneratedException;
+
 /*
 	/**
 	 * @param studentID

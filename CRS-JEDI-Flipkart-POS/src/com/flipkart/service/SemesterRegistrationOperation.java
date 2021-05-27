@@ -3,6 +3,7 @@
  */
 package com.flipkart.service;
 
+
 import java.sql.Array;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import com.flipkart.dao.SemesterRegistrationDaoOperation;
 import com.flipkart.exception.*;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+
 
 /**
  * @author Asus

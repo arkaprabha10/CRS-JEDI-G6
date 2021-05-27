@@ -38,12 +38,14 @@ public interface SemesterRegistrationInterface {
 	 * @param courseId 
 	 * @return Boolean value indicating if it is was dropped successfully
 	 */
+
 	public boolean dropCourse(int studentId, int semesterId, String courseId);
 	
 	/**
 	 * Method to view all courses available
 	 * @return list of all courses with availbale seats
 	 */
+
 	public ArrayList<Course> viewAvailableCourses();
 
 	/**

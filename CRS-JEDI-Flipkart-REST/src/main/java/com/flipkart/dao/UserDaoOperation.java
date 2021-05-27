@@ -214,7 +214,6 @@ public class UserDaoOperation implements UserDaoInterface{
 					
 					if(!account_status)
 					{
-						
 						throw new Exception("Account Not Approved By Admin");
 						// TODO: ma
 					}
@@ -222,7 +221,6 @@ public class UserDaoOperation implements UserDaoInterface{
 				}
 				return true;
 			}
-
 
 		} 
 //		catch (UserNotFoundException ex) {
@@ -237,9 +235,7 @@ public class UserDaoOperation implements UserDaoInterface{
 //		catch (Exception ex) {
 //			System.out.println(ex.getMessage());
 //		}
-
 		// throw exception on login failure
 		return false;
 	}
-
 }

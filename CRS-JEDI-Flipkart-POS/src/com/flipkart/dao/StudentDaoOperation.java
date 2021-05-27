@@ -87,6 +87,7 @@ public class StudentDaoOperation implements StudentDaoInterface {
 
 	@Override
 	public ReportCard viewReportCard(int StudentID, int semesterId) throws ReportCardNotGeneratedException, GradeNotAddedException , StudentNotApprovedException, FeesPendingException{
+
 		Connection connection=DBUtil.getConnection();
 		
 		ReportCard R = new ReportCard();

@@ -58,6 +58,7 @@ public class SemesterRegistrationDaoOperation implements SemesterRegistrationDao
 	@Override
 	public boolean addCourse(int studentId, int semesterId, String courseId, boolean isPrimary) throws CourseNotFoundException, CourseSeatsUnavailableException, CourseExistsInCartException {
 
+
 		PreparedStatement stmt;
 		Course courseObj;
 
@@ -169,6 +170,7 @@ public class SemesterRegistrationDaoOperation implements SemesterRegistrationDao
 		try {
 
 			int currentAvailableSeats = Objects.requireNonNull(getCourseDetails(courseId, semesterId)).getAvailableSeats();
+
 			String query = SQLQueries.REGISTRATION_UPDATE_SEATS;
 
 			int seatChange =  (change == 0 ? -1 : 1);
@@ -275,6 +277,7 @@ public class SemesterRegistrationDaoOperation implements SemesterRegistrationDao
 
 		try {
 
+
 			String query = SQLQueries.REGISTRATION_GET_ALL_COURSES;
 
 			stmt = conn.prepareStatement(query);
@@ -293,6 +296,7 @@ public class SemesterRegistrationDaoOperation implements SemesterRegistrationDao
 				courseCatalog.add(course);
 			}
 		} catch (SQLException e) {
+
 			logger.error(e.getMessage());
 		}
 

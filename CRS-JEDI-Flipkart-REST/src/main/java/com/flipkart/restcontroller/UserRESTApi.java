@@ -3,6 +3,7 @@
  */
 package com.flipkart.restcontroller;
 
+<<<<<<< HEAD
 import java.sql.SQLException;
 
 import javax.validation.constraints.NotNull;
@@ -25,11 +26,16 @@ import com.flipkart.exception.UserNotFoundException;
 import com.flipkart.service.StudentOperation;
 import com.flipkart.service.UserOperation;
 
+=======
+>>>>>>> 9e508291de1122f97e41e2d0216bd4efe682ab4a
 /**
  * @author rutwi
  *
  */
+<<<<<<< HEAD
 @Path("/user")
+=======
+>>>>>>> 9e508291de1122f97e41e2d0216bd4efe682ab4a
 public class UserRESTApi {
 	
 	// TODO:
@@ -37,6 +43,7 @@ public class UserRESTApi {
 	 * - Login a user - POST
 	 * - Register a user - POST
 	 */
+<<<<<<< HEAD
 	
 	StudentOperation so = new StudentOperation();
 	
@@ -97,4 +104,7 @@ public class UserRESTApi {
 		
 	}  
 	
+=======
+
+>>>>>>> 9e508291de1122f97e41e2d0216bd4efe682ab4a
 }

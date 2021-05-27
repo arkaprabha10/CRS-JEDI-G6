@@ -44,7 +44,6 @@ public class AdminOperation implements AdminInterface {
 		}
 		return instance;
 	}
-	
 
 	AdminDaoInterface ado  = AdminDaoOperation.getInstance();
 
@@ -62,7 +61,6 @@ public class AdminOperation implements AdminInterface {
 	public void addProfessor(Professor professor) {
 
 		ado.addProfessor(professor);
-
 	}
 
 	@Override
@@ -88,7 +86,6 @@ public class AdminOperation implements AdminInterface {
 		newCourse.setAvailableSeats(10);
 
 		ado.addCourse(newCourse);
-
 	}
 
 	

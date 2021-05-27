@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 package com.flipkart.restcontroller;
 
 import org.glassfish.jersey.server.ResourceConfig;
@@ -18,3 +19,17 @@ public class ApplicationConfig extends ResourceConfig {
 	}
 
 }
+=======
+/**
+ * 
+ */
+package com.flipkart.restcontroller;
+
+/**
+ * @author rutwi
+ *
+ */
+public class ApplicationConfig {
+
+}
+>>>>>>> 9e508291de1122f97e41e2d0216bd4efe682ab4a

@@ -27,6 +27,7 @@ import com.flipkart.utils.DBUtil;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
+
 /**
  * @author rutwi
  *
@@ -34,8 +35,10 @@ import org.apache.log4j.Logger;
 public class AdminDaoOperation implements AdminDaoInterface {
 	
 	private PreparedStatement statement = null;
+
 	private static volatile AdminDaoOperation instance = null;
 	private static final Logger logger = LogManager.getLogger(AdminDaoOperation.class);
+
 
 	
 	/**
@@ -92,7 +95,7 @@ public class AdminDaoOperation implements AdminDaoInterface {
 			}
 			
 			PreparedStatement update_statement = connection.prepareStatement(SQLQueries.APPROVE_STUDENT(studentId, semesterId));
-			
+
 			update_statement.executeUpdate();
 			
 		} catch (SQLException e) {
@@ -103,7 +106,9 @@ public class AdminDaoOperation implements AdminDaoInterface {
 	@Override
 	public void addProfessor(Professor professor){
 		// TODO Auto-generated method stub
+
 		String sql = SQLQueries.ADMIN_ADD_PROFESSOR;
+
 		Connection connection = DBUtil.getConnection();
 		
 		try {
@@ -131,6 +136,7 @@ public class AdminDaoOperation implements AdminDaoInterface {
 			System.out.println(row + " user added.");
 			
 		} catch (SQLException e) {
+
 			logger.error(e.getMessage());
 		}
 	}
@@ -138,7 +144,9 @@ public class AdminDaoOperation implements AdminDaoInterface {
 	@Override
 	public void removeProfessor(int professorID) {
 		// TODO Auto-generated method stub
+
 		String sql = SQLQueries.ADMIN_REMOVE_PROFESSOR;
+
 		Connection connection = DBUtil.getConnection();
 		
 		try {
@@ -150,14 +158,15 @@ public class AdminDaoOperation implements AdminDaoInterface {
 			System.out.println(row + " user deleted.");
 			
 		} catch (SQLException e) {
+
 			logger.error(e.getMessage());
 		}
-		
 	}
 
 	@Override
+
 	public ReportCard generateReportCard(int studentID) throws StudentNotApprovedException {
-		
+
 		Connection connection = DBUtil.getConnection();
 		ReportCard R = new ReportCard();
 		
@@ -168,7 +177,7 @@ public class AdminDaoOperation implements AdminDaoInterface {
 			rs.next();
 			
 			if(rs.getBoolean(1)) {
-				
+
 				StudentOperation so = new StudentOperation();
 				R = so.viewReportCard(studentID, constants.SemesterID);
 				
@@ -189,7 +198,9 @@ public class AdminDaoOperation implements AdminDaoInterface {
 	@Override
 	public void removeCourse(String courseID) {
 		// TODO Auto-generated method stub
+
 		String sql = SQLQueries.ADMIN_REMOVE_COURSE;
+
 		Connection connection = DBUtil.getConnection();
 		
 		try {
@@ -210,6 +221,7 @@ public class AdminDaoOperation implements AdminDaoInterface {
 	public void addCourse(Course course) {
 		// TODO Auto-generated method stub
 		String sql = SQLQueries.ADMIN_ADD_COURSE;
+
 		Connection connection = DBUtil.getConnection();
 		
 		try {
@@ -224,7 +236,9 @@ public class AdminDaoOperation implements AdminDaoInterface {
 			System.out.println(row + " course added.");
 			
 		} catch (SQLException e) {
+
 			logger.error(e.getMessage());
+
 		}
 		
 	}

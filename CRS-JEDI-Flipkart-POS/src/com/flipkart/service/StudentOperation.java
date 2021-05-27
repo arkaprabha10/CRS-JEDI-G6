@@ -48,6 +48,7 @@ public class StudentOperation implements StudentInterface {
 	    	R.getGrades().forEach((key, value) -> {
 	    		System.out.println(key + "    " + value);
 	    		});
+
 		} catch (ReportCardNotGeneratedException | GradeNotAddedException | StudentNotApprovedException | FeesPendingException e) {
 			System.out.println(e.getMessage());
 		}
@@ -57,7 +58,6 @@ public class StudentOperation implements StudentInterface {
 
 		ReportCardOperation report = new ReportCardOperation();
 		R.setSpi(report.getSPI(R));
-
 		return R;
 	}
 

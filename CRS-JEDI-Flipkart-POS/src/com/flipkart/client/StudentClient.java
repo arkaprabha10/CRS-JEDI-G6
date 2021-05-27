@@ -212,6 +212,7 @@ public class StudentClient {
         boolean courseDropped = false;
 		try {
 			courseDropped = sro.dropCourse(studentID, 1, courseID);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -239,6 +240,7 @@ public class StudentClient {
 		try {
 			courseAdded = sro.addCourse(studentID, 1, courseID, isPrimary);
 		} catch (Exception e) {
+
 			e.printStackTrace();
 		}
 

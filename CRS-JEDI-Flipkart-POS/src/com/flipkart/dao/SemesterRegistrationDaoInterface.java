@@ -12,6 +12,7 @@ import com.flipkart.bean.Payment;
 import com.flipkart.bean.RegisteredCourses;
 import com.flipkart.exception.*;
 
+
 /**
  * @author Asus
  *
@@ -25,7 +26,9 @@ public interface SemesterRegistrationDaoInterface {
 	 * @param courseId
 	 * @return the course if it is added successfully, else null
 	 */
+
 	public boolean addCourse(int studentId, int semesterId, String courseId, boolean isPrimary) throws CourseNotFoundException, CourseSeatsUnavailableException, CourseExistsInCartException;
+
 	
 	/**
 	 * Method to drop Course selected by student 
@@ -42,6 +45,7 @@ public interface SemesterRegistrationDaoInterface {
 	 * @return
 	 * @throws SQLException
 	 */
+
 	public boolean finishRegistration(int studentId, int semesterId) throws InvalidSemesterRegistration;
 	
 	/**
