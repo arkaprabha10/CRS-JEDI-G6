@@ -65,8 +65,11 @@ public class ProfessorDaoOperation implements ProfessorDaoInterface {
 			checkStmt.setInt(3, semesterID);
 			ResultSet rs = checkStmt.executeQuery();
 			
-			rs.next();
-			if(!rs.getBoolean("is_approved") ) {
+			if(!rs.next()) {
+				throw new StudentNotRegisteredException();
+			}
+			
+			if(!rs.getBoolean("is_approved")) {
 				throw new StudentNotRegisteredException();
 				
 			}
