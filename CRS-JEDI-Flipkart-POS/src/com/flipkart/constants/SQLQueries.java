@@ -61,5 +61,25 @@ public class SQLQueries {
 		String qry="update student set account_approved = 1 where student_id = "+studentId;
 		return qry;
 	}
-
+	
+	public static final String CHECK_COURSE_VALIDITY(Integer studentID, Integer semesterID, String courseID) {
+		String qry="SELECT is_approved from registered_courses WHERE student_id = ? AND course_id = ? AND semester_id = ?";
+		return qry;
+	}
+	public static final String ADD_GRADE(Integer studentID, Integer semesterID, String courseID,Integer grade) {
+		String qry="UPDATE registered_courses SET grade = ? WHERE student_id = ? AND course_id = ? AND semester_id = ?";
+		return qry;
+	}
+	public static final String VIEW_REGISTERED_STUDENTS(String courseID, Integer semesterID) {
+		String qry="SELECT * FROM registered_courses WHERE course_id = ? AND semester_id = ?";
+		return qry;
+	}
+	public static final String VIEW_ASSOCIATED_PROFESSOR(Integer instructorID) {
+		String qry="SELECT * FROM course_catalog WHERE instructor = ?";
+		return qry;
+	}
+	public static final String VIEW_PROFESSOR_ID(String username) {
+		String qry="select * from professor where user_name = ?";
+		return qry;
+	}
 }
