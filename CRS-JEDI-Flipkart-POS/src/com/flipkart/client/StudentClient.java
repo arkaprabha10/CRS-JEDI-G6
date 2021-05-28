@@ -259,7 +259,7 @@ public class StudentClient {
 
         System.out.println("Course catalog : ");
         for(Course c : courseCatalog) {
-            System.out.println("Course ID : "+c.getCourseID()+" \t Course Name : "+ c.getCoursename()+"\t Instructor : "+c.getInstructorID());
+            System.out.println("Course ID : "+c.getCourseID()+" \t Course Name : "+ c.getCoursename()+"\t Instructor : "+c.getInstructorID()+"\t Available seats : "+c.getAvailableSeats());
         }
     }
 
