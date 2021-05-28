@@ -52,6 +52,7 @@ public class ProfessorOperation implements ProfessorInterface {
 	}
 
 	//Add grade
+	@Override
 	public void addGrade(Integer studentID, Integer semesterID, String courseID, Integer grade) throws SQLException, GradeNotAddedException, StudentNotRegisteredException  
 	{
 		
@@ -61,6 +62,7 @@ public class ProfessorOperation implements ProfessorInterface {
 	}
 
 	//view student details who have registered for a particular course
+	@Override
 
 	public ArrayList<RegisteredCourses> viewCourseStudents(String courseID, Integer semesterID) throws SQLException, NoStudentInCourseException {
 		
@@ -79,6 +81,7 @@ public class ProfessorOperation implements ProfessorInterface {
 	}
 
 	//view course details which the professor is associated with
+	@Override
 	public ArrayList<Course> viewCourseProf(int instructorID) throws SQLException, ProfessorNotAssignedException {
 	
 		ArrayList<Course>ans = new ArrayList<Course>();
@@ -91,6 +94,7 @@ public class ProfessorOperation implements ProfessorInterface {
 		
 	}
 
+	@Override
 
 	public void registerCourse(int instructorID, Integer semesterID, String courseID) throws Exception {
 		ProfessorDaoInterface profObj= ProfessorDaoOperation.getInstance();
