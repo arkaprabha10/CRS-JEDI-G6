@@ -12,6 +12,7 @@ import com.flipkart.bean.ReportCard;
 import com.flipkart.bean.Student;
 import com.flipkart.exception.FeesPendingException;
 import com.flipkart.exception.GradeNotAddedException;
+import com.flipkart.exception.ReportCardNotGeneratedException;
 import com.flipkart.exception.StudentNotApproved;
 import com.flipkart.exception.StudentNotApprovedException;
 import com.flipkart.exception.StudentNotRegisteredException;
@@ -38,8 +39,9 @@ public interface StudentInterface {
 	 * @return reportCard
 	 * @throws StudentNotApprovedException 
 	 * @throws SQLException 
+	 * @throws ReportCardNotGeneratedException 
 	 */
-	public ReportCard viewReportCard(int StudentID, int semesterId) throws GradeNotAddedException, StudentNotApproved,FeesPendingException, SQLException, StudentNotApprovedException;
+	public ReportCard viewReportCard(int StudentID, int semesterId) throws GradeNotAddedException, StudentNotApproved,FeesPendingException, SQLException, StudentNotApprovedException, ReportCardNotGeneratedException;
 	
 	/**
 	 * @param studentID
@@ -48,7 +50,11 @@ public interface StudentInterface {
 	 * @throws SQLException 
 	 */
 	public List<Course> viewRegisteredCourses(int studentID, int semesterId) throws StudentNotRegisteredException, SQLException;
-	
-	
 
+	/**
+	 * @param username
+	 * @return
+	 * @throws StudentNotRegisteredException 
+	 */
+	public int getStudentIDFromUserName(String username) throws StudentNotRegisteredException;
 }

@@ -1,7 +1,4 @@
 
-/**
- * 
- */
 package com.flipkart.dao;
 
 import java.sql.Connection;
@@ -18,11 +15,18 @@ import com.flipkart.bean.ReportCard;
 import com.flipkart.bean.Student;
 import com.flipkart.constants.SQLQueries;
 import com.flipkart.constants.constants;
+import com.flipkart.exception.CourseNotFoundException;
 import com.flipkart.exception.FeesPendingException;
 import com.flipkart.exception.GradeNotAddedException;
+import com.flipkart.exception.ProfessorNotRegisteredException;
+import com.flipkart.exception.ReportCardNotGeneratedException;
 import com.flipkart.exception.StudentNotApprovedException;
 import com.flipkart.service.ReportCardOperation;
+import com.flipkart.service.StudentOperation;
 import com.flipkart.utils.DBUtil;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 
 /**
  * @author rutwi
@@ -31,8 +35,10 @@ import com.flipkart.utils.DBUtil;
 public class AdminDaoOperation implements AdminDaoInterface {
 	
 	private PreparedStatement statement = null;
-	
+
 	private static volatile AdminDaoOperation instance = null;
+	private static final Logger logger = LogManager.getLogger(AdminDaoOperation.class);
+
 
 	
 	/**
@@ -63,9 +69,14 @@ public class AdminDaoOperation implements AdminDaoInterface {
 		
 		try {
 			statement = connection.prepareStatement(SQLQueries.GET_STUDENT_BY_ID(studentId, semesterId));
-						
+//			statement.setInt(1, studentId);
+//			statement.setInt(2, semesterId);
 			ResultSet rs = statement.executeQuery();
-			rs.next();
+			if(!rs.next()) {
+				throw new StudentNotApprovedException(studentId);
+			}
+			else {
+			
 			Boolean primary4 = true;
 			Boolean fees = true;
 			List<String> primary_course_ids = new ArrayList<String>();
@@ -89,20 +100,21 @@ public class AdminDaoOperation implements AdminDaoInterface {
 			}
 			
 			PreparedStatement update_statement = connection.prepareStatement(SQLQueries.APPROVE_STUDENT(studentId, semesterId));
-			
-			update_statement .executeUpdate();
-			
+
+			update_statement.executeUpdate();
+		}	
 		} catch (SQLException e) {
-			
-			// TODO Auto-generated catch block
-//			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
-	}
+			
+}
 
 	@Override
 	public void addProfessor(Professor professor){
 		// TODO Auto-generated method stub
-		String sql = "INSERT INTO professor(user_name, name, joining_year, contact_number, password, instructor_ID, designation, department) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
+		String sql = SQLQueries.ADMIN_ADD_PROFESSOR;
+
 		Connection connection = DBUtil.getConnection();
 		
 		try {
@@ -130,17 +142,17 @@ public class AdminDaoOperation implements AdminDaoInterface {
 			System.out.println(row + " user added.");
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+			logger.error(e.getMessage());
 		}
-		
-		 
 	}
 
 	@Override
-	public void removeProfessor(int professorID) {
+	public void removeProfessor(int professorID) throws ProfessorNotRegisteredException{
 		// TODO Auto-generated method stub
-		String sql = "DELETE FROM professor WHERE instructor_ID=?";
+
+		String sql = SQLQueries.ADMIN_REMOVE_PROFESSOR;
+
 		Connection connection = DBUtil.getConnection();
 		
 		try {
@@ -148,19 +160,25 @@ public class AdminDaoOperation implements AdminDaoInterface {
 			statement.setInt(1, professorID);
 			
 			int row = statement.executeUpdate();
+			if(row==0) {
+				throw new ProfessorNotRegisteredException(professorID);
+			}
+			else {
 			
-			System.out.println(row + " user deleted.");
+				System.out.println(row + " user deleted.");
+			}
+			
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+			logger.error(e.getMessage());
 		}
-		
 	}
 
 	@Override
-	public ReportCard generateReportCard(int studentID) throws StudentNotApprovedException, GradeNotAddedException, FeesPendingException {
-		
+
+	public ReportCard generateReportCard(int studentID) throws StudentNotApprovedException, GradeNotAddedException, FeesPendingException, ReportCardNotGeneratedException {
+
 		Connection connection = DBUtil.getConnection();
 		ReportCard R = new ReportCard();
 		
@@ -171,17 +189,12 @@ public class AdminDaoOperation implements AdminDaoInterface {
 			rs.next();
 			
 			if(rs.getBoolean(1)) {
-				
-				StudentDaoOperation sdo = new StudentDaoOperation();
-				R = sdo.viewReportCard(studentID, constants.SemesterID);
-				ReportCardOperation report = new ReportCardOperation();
-				R.setSpi(report.getSPI(R));
+
+				StudentOperation so = new StudentOperation();
+				R = so.viewReportCard(studentID, constants.SemesterID);
 				
 				PreparedStatement statement1 = connection.prepareStatement(SQLQueries.GENERATE_REPORT_CARD(studentID,R.getSpi()));
-				
 				statement1.executeUpdate();
-				
-				
 			}
 			
 			else {
@@ -189,16 +202,16 @@ public class AdminDaoOperation implements AdminDaoInterface {
 			}
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-//			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		return R;
 	}
 
 	@Override
-	public void removeCourse(String courseID) {
-		// TODO Auto-generated method stub
-		String sql = "DELETE FROM course_catalog WHERE courseID=?";
+	public void removeCourse(String courseID) throws CourseNotFoundException {
+
+		String sql = SQLQueries.ADMIN_REMOVE_COURSE;
+
 		Connection connection = DBUtil.getConnection();
 		
 		try {
@@ -206,12 +219,19 @@ public class AdminDaoOperation implements AdminDaoInterface {
 			statement.setString(1, courseID);
 			
 			int row = statement.executeUpdate();
+			if(row == 0) {
 			
-			System.out.println(row + " course deleted.");
+				throw new CourseNotFoundException(courseID);
+			}
+			else {
+			
+				System.out.println(row + " course deleted.");
+			}
+			
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			
+			logger.error(e.getMessage());
 		}
 		
 	}
@@ -219,7 +239,8 @@ public class AdminDaoOperation implements AdminDaoInterface {
 	@Override
 	public void addCourse(Course course) {
 		// TODO Auto-generated method stub
-		String sql = "INSERT INTO course_catalog(courseID, course_name,  offered_semester, available_seats) VALUES (?, ?, ?, ?)";
+		String sql = SQLQueries.ADMIN_ADD_COURSE;
+
 		Connection connection = DBUtil.getConnection();
 		
 		try {
@@ -234,8 +255,9 @@ public class AdminDaoOperation implements AdminDaoInterface {
 			System.out.println(row + " course added.");
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+			logger.error(e.getMessage());
+
 		}
 		
 	}
@@ -278,8 +300,7 @@ public class AdminDaoOperation implements AdminDaoInterface {
 			
 			
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		return StudentList;
 	
@@ -296,8 +317,10 @@ public class AdminDaoOperation implements AdminDaoInterface {
 			statement = connection.prepareStatement(SQLQueries.GET_PENDING_STUDENT);
 						
 			ResultSet rs = statement.executeQuery();
-			rs.next();
-			
+			if(!rs.next()  ) {
+				logger.error("No pending student!!!");
+			}
+			else {
 			do {
 				Student student = new Student();
 				student.setUserID(rs.getString(1));
@@ -309,11 +332,10 @@ public class AdminDaoOperation implements AdminDaoInterface {
 				student.setContactNumber(rs.getString(8));
 				pendingStudents.add(student);
 			}while(rs.next());
-				
+			}	
 				
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-//			e.printStackTrace();
+//			logger.error(e.getMessage());
 		}
 		return pendingStudents;
 	}
@@ -331,12 +353,8 @@ public class AdminDaoOperation implements AdminDaoInterface {
 			System.out.println("Student ID: "+studentId+" Approved !");
 				
 		} catch (SQLException e) {
-			e.getMessage();
-			// TODO Auto-generated catch block
-//			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
-		
-		
 	}
 
 }

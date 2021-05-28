@@ -3,6 +3,8 @@
  */
 package com.flipkart.service;
 
+
+import java.sql.Array;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +15,10 @@ import com.flipkart.bean.RegisteredCourses;
 import com.flipkart.bean.SemesterRegistration;
 import com.flipkart.dao.SemesterRegistrationDaoInterface;
 import com.flipkart.dao.SemesterRegistrationDaoOperation;
+import com.flipkart.exception.*;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 
 /**
  * @author Asus
@@ -21,7 +27,7 @@ import com.flipkart.dao.SemesterRegistrationDaoOperation;
 public class SemesterRegistrationOperation implements SemesterRegistrationInterface{
 	
 	private static volatile SemesterRegistrationOperation instance = null;
-	
+	private static final Logger logger = LogManager.getLogger(SemesterRegistration.class);
 	SemesterRegistrationDaoInterface srdo = SemesterRegistrationDaoOperation.getInstance();
 
 	private SemesterRegistrationOperation() {
@@ -42,76 +48,59 @@ public class SemesterRegistrationOperation implements SemesterRegistrationInterf
 	}
 
 	@Override
-	public boolean addCourse(int studentId, int semesterId, String courseId, boolean isPrimary) {
+	public boolean addCourse(int studentId, int semesterId, String courseId, boolean isPrimary) throws CourseNotFoundException, CourseSeatsUnavailableException, CourseExistsInCartException {
 
-//		SemesterRegistrationDaoOperation srdo = new SemesterRegistrationDaoOperation();
+//		try {
 
-		try {
 			return srdo.addCourse(studentId, semesterId, courseId, isPrimary);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return false;
+
+//		} catch (CourseNotFoundException | CourseSeatsUnavailableException | CourseExistsInCartException e) {
+//			logger.error(e.getMessage());
+//		}
+//		return false;
 	}
 
 	@Override
-	public boolean dropCourse(int studentId, int semesterId, String courseId) {
+	public boolean dropCourse(int studentId, int semesterId, String courseId) throws CourseNotFoundException, CourseNotInCart {
 
-//		SemesterRegistrationDaoOperation srdo = new SemesterRegistrationDaoOperation();
+//		try {
 
-		try {
 			return srdo.dropCourse(studentId, semesterId, courseId);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return false;
+
+//		} catch (CourseNotFoundException | CourseNotInCart e) {
+//			logger.error(e.getMessage());
+//		}
+//		return false;
 	}
 
 	@Override
-	public RegisteredCourses viewRegisteredCourses(int studentId, int semesterId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public ArrayList<Course> viewAvailableCourses() throws Exception {
 
-	@Override
-	public ArrayList<Course> viewAvailableCourses() {
+//		try {
 
-//		SemesterRegistrationDaoOperation srdo = new SemesterRegistrationDaoOperation();
+			ArrayList<Course> courseCatalog = srdo.viewAvailableCourses();
+			if(courseCatalog == null) {
+				throw new Exception("Error encountered while retrieving course catalog");
+			}
 
-		try {
 			return srdo.viewAvailableCourses();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
+
+//		} catch (Exception e) {
+//			logger.error(e.getMessage());
+//		}
+//		return null;
 	}
 
 	@Override
-	public int calculateFees(int studentId, int semesterId) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+	public boolean finishRegistration(int studentId, int semesterId) throws InvalidSemesterRegistration {
 
-	@Override
-	public boolean finishRegistration(int studentId, int semesterId) {
-//		SemesterRegistrationDaoOperation srdo = new SemesterRegistrationDaoOperation();
+//		try {
 
-		try {
 			return srdo.finishRegistration(studentId, semesterId);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return false;
-	}
 
-	@Override
-	public Payment payFees(int studentId, int semesterId, String paymentMode) {
-		// TODO Auto-generated method stub
-		return null;
+//		} catch (InvalidSemesterRegistration e) {
+//			logger.error(e.getMessage());
+//		}
+//		return false;
 	}
-
 }

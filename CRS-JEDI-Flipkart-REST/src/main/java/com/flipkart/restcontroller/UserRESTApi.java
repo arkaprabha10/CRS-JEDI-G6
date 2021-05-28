@@ -80,17 +80,15 @@ public class UserRESTApi {
 	@Consumes("application/json")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response RegisterUser(Student student) {
-		
+		Student newStudent = new Student();
 		 try {
-			so.addStudent(student.getUserID(), student.getName(), student.getPassword(), student.getDepartment(), student.getContactNumber(), student.getJoiningYear());
+			newStudent = so.addStudent(student.getUserID(), student.getName(), student.getPassword(), student.getDepartment(), student.getContactNumber(), student.getJoiningYear());
 		} catch (UserAlreadyInUseException e) {
-			return Response.status(500).entity(e.getMessage()).build();//			e.printStackTrace();
-		} catch (SQLException e) {
-			return Response.status(500).entity(e.getMessage()).build();//			e.printStackTrace();
+			return Response.status(500).entity("User Name Already in Use").build();//			e.printStackTrace();
 		}
          
 		
-        String result = "Added student : " + student;
+        String result = "Added student : " + student.getName() +  " | Student ID : "+newStudent.getStudentID();
 		
 		
 		return Response.status(201).entity(result).build();

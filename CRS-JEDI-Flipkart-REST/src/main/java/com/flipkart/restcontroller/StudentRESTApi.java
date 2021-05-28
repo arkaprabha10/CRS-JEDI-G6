@@ -36,12 +36,20 @@ import com.flipkart.constants.constants;
 //import com.flipkart.bean.StudentGrade;
 //import com.flipkart.constant.ModeOfPayment;
 import com.flipkart.exception.CourseAlreadyRegisteredException;
+import com.flipkart.exception.CourseExistsInCartException;
 import com.flipkart.exception.CourseLimitExceededException;
 import com.flipkart.exception.CourseNotAssignedException;
 import com.flipkart.exception.CourseNotDeletedException;
 //import com.flipkart.exception.CourseLimitExceedException;
 import com.flipkart.exception.CourseNotFoundException;
+import com.flipkart.exception.CourseNotInCart;
+import com.flipkart.exception.CourseSeatsUnavailableException;
+import com.flipkart.exception.FeesPendingException;
+import com.flipkart.exception.GradeNotAddedException;
+import com.flipkart.exception.InvalidSemesterRegistration;
 import com.flipkart.exception.PaymentFailedException;
+import com.flipkart.exception.ReportCardNotGeneratedException;
+import com.flipkart.exception.StudentNotApprovedException;
 import com.flipkart.exception.StudentNotRegisteredException;
 import com.flipkart.service.NotificationInterface;
 import com.flipkart.service.NotificationOperation;
@@ -106,8 +114,7 @@ public class StudentRESTApi {
 		
 			try {
 				registrationInterface.addCourse(studentId, constants.SemesterID, courseId, primary);
-			} catch (CourseNotFoundException | CourseNotAssignedException | CourseAlreadyRegisteredException
-					| CourseLimitExceededException | StudentNotRegisteredException e) {
+			} catch (CourseNotFoundException | CourseSeatsUnavailableException | CourseExistsInCartException e) {
 
 				return Response.status(500).entity(e.getMessage()).build();
 
@@ -139,10 +146,10 @@ public class StudentRESTApi {
 		
 			try {
 				registrationInterface.dropCourse(studentId, constants.SemesterID, courseId);
-			} catch (CourseNotFoundException | CourseNotDeletedException | StudentNotRegisteredException e) {
+			} catch (CourseNotFoundException | CourseNotInCart e) {
 				return Response.status(500).entity( e.getMessage()).build();				
 			}
-			return Response.status(201).entity( "Course Added").build();
+			return Response.status(201).entity( "Course Dropped").build();
 		
 	}
 	
@@ -160,7 +167,7 @@ public class StudentRESTApi {
 		
 		try {
 			return registrationInterface.viewAvailableCourses();
-		} catch (StudentNotRegisteredException e) {
+		} catch (Exception e) {
 			Response.status(500).entity( e.getMessage()).build();
 			return null;
 		}
@@ -181,7 +188,13 @@ public class StudentRESTApi {
 			@Max(value = 9999, message = "Student ID should be less than 1000")
 			@QueryParam("studentId") int studentId) throws ValidationException{
 		
-			return so.viewRegisteredCourses(studentId,constants.SemesterID);
+			try {
+				return so.viewRegisteredCourses(studentId,constants.SemesterID);
+			} catch (StudentNotRegisteredException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return null;
 	}
 	
 	@GET
@@ -193,9 +206,13 @@ public class StudentRESTApi {
 			@Max(value = 9999, message = "Student ID should be less than 1000")
 			@QueryParam("studentId") Integer studentId) {		
 		
-			registrationInterface.finishRegistration(studentId, constants.SemesterID);
+			try {
+				registrationInterface.finishRegistration(studentId, constants.SemesterID);
+			} catch (InvalidSemesterRegistration e) {
+				return Response.status(500).entity(e.getMessage()).build();
+			}
 			
-			return Response.status(201).entity(null).build();
+			return Response.status(201).entity("Your Registration is Complete. It has been forwarded for Approval").build();
 		
 		
 	}
@@ -250,7 +267,14 @@ public class StudentRESTApi {
 			@Max(value = 9999, message = "Student ID should be less than 1000")
 			@QueryParam("studentId") Integer studentId) {		
 		
-			ReportCard R = so.viewReportCard(studentId,constants.SemesterID);
+			ReportCard R = null;
+			try {
+				R = so.viewReportCard(studentId,constants.SemesterID);
+			} catch (GradeNotAddedException | StudentNotApprovedException | FeesPendingException
+					| ReportCardNotGeneratedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
 			return R.getGrades();//Response.status(201).entity(null).build();
 		

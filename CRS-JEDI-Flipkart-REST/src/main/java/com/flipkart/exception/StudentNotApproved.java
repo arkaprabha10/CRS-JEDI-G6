@@ -21,6 +21,6 @@ public class StudentNotApproved extends Exception{
 	}
 
 	public String getMessage() {
-		return "Student "+ studentId +"is not approved";
+		return "Student "+ studentId +"is not approved. Registration or Fees Payment Pending ";
 	}
 }

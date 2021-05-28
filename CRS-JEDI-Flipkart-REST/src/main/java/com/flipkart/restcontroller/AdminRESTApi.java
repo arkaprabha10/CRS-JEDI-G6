@@ -53,18 +53,17 @@ public class AdminRESTApi {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response addCourse(Course course) {
 		
-		try {
-			ao.addCourse(course.getCoursename(), course.getCourseID(), course.getOfferedSemester());
-		}
-		catch(Exception e)
-		{
-			return Response.status(500).entity(e.getMessage()).build();
-		}
 		
-         
-		
-        String result = "Added course : " + course.getCourseID();
-		return Response.status(201).entity(result).build();
+			try {
+				ao.addCourse(course.getCoursename(), course.getCourseID(), course.getOfferedSemester());
+			} 
+			catch(Exception ex)
+			{
+				return Response.status(500).entity(ex.getMessage()).build();
+			}
+			return Response.status(201).entity( "Course : "+course.getCourseID()+"\t "+course.getCoursename()+" Added ").build();
+			
+		   
 	}
 	
 	@POST

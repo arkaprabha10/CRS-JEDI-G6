@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.flipkart.service;
 
 import java.util.ArrayList;
@@ -17,6 +14,8 @@ import com.flipkart.exception.CourseNotFoundException;
 import com.flipkart.exception.FeesPendingException;
 import com.flipkart.exception.GradeNotAddedException;
 import com.flipkart.exception.ProfessorNotAddedException;
+import com.flipkart.exception.ProfessorNotRegisteredException;
+import com.flipkart.exception.ReportCardNotGeneratedException;
 import com.flipkart.exception.StudentNotApprovedException;
 import com.flipkart.exception.StudentNotRegisteredException;
 
@@ -40,16 +39,18 @@ public interface AdminInterface {
 	
 	/**
 	 * @param professor
+	 * @throws ProfessorNotRegisteredException 
 	 */
-	public void removeProfessor(int professorID);
+	public void removeProfessor(int professorID) throws ProfessorNotRegisteredException;
 	
 	/**
 	 * @param studentID
 	 * @return 
 	 * @throws StudentNotApprovedException 
 	 * @throws FeesPendingException 
+	 * @throws ReportCardNotGeneratedException 
 	 */
-	public ReportCard generateReportCard(int studentID) throws GradeNotAddedException, StudentNotApprovedException, FeesPendingException;
+	public ReportCard generateReportCard(int studentID) throws GradeNotAddedException, StudentNotApprovedException, FeesPendingException, ReportCardNotGeneratedException;
 	
 	/**
 	 * @param courseID
