@@ -92,13 +92,14 @@ public class AdminClient {
         	for(Student st: pendingStudents) {
         		System.out.println(st.getStudentID()+"\t"+st.getName()+"\t"+st.getDepartment()+"\t"+st.getJoiningYear()+"\t"+st.getContactNumber());
         	}
+        	System.out.println("\n Enter the Student ID for the Student Account you want to approve : ");
+    		Integer studentID = sc.nextInt();
+    		sc.nextLine();
+    		
+    		ao.approveStudentAccount(studentID);
     	}
 
-    	System.out.println("\n Enter the Student ID for the Student Account you want to approve : ");
-		Integer studentID = sc.nextInt();
-		sc.nextLine();
-		
-		ao.approveStudentAccount(studentID);
+    	
 	}
 
 	private void viewCourseStudentList() {

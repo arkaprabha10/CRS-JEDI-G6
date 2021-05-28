@@ -88,7 +88,7 @@ public class StudentDaoOperation implements StudentDaoInterface {
 			PreparedStatement preparedStatement=connection.prepareStatement(SQLQueries.GET_REPORT(StudentID,semesterId));
 			
 			ResultSet rs = preparedStatement.executeQuery();
-			rs.next();
+//			rs.next();
 			HashMap<String,Integer> grades = new HashMap<String, Integer>();
 
 			while (rs.next()) {

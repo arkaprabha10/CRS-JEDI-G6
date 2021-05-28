@@ -95,4 +95,8 @@ public class SQLQueries {
 		String qry="select * from professor where user_name = ?";
 		return qry;
 	}
+	public static final String VERIFY_PAYMENT(Integer studentId) {
+		String qry="select isPaid from payments where studentId = ?";
+		return qry;
+	}
 }

@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.flipkart.dao;
 
 import java.sql.SQLException;
@@ -12,7 +9,15 @@ import com.flipkart.bean.Course;
 import com.flipkart.bean.Professor;
 import com.flipkart.bean.ReportCard;
 import com.flipkart.bean.Student;
-import com.flipkart.exception.*;
+import com.flipkart.exception.CourseAlreadyPresentException;
+import com.flipkart.exception.CourseNotDeletedException;
+import com.flipkart.exception.CourseNotFoundException;
+import com.flipkart.exception.FeesPendingException;
+import com.flipkart.exception.GradeNotAddedException;
+import com.flipkart.exception.ProfessorNotAddedException;
+import com.flipkart.exception.ProfessorNotRegisteredException;
+import com.flipkart.exception.StudentNotApprovedException;
+import com.flipkart.exception.StudentNotRegisteredException;
 
 /**
  * @author rutwi
@@ -37,7 +42,7 @@ public interface AdminDaoInterface {
 	 * @param professor
 	 */
 
-	public void removeProfessor(int professorID) throws ProfessorNotFoundException;
+	public void removeProfessor(int professorID) throws ProfessorNotRegisteredException;
 
 	
 	/**

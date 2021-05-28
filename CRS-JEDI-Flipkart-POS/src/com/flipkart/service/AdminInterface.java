@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.flipkart.service;
 
 import java.util.ArrayList;
@@ -31,12 +28,12 @@ public interface AdminInterface {
 	 * @throws StudentNotApprovedException 
 	 * @throws FeesPendingException 
 	 */
-	public void approveStudentRegistration(int studentId,int semesterId);
+	public void approveStudentRegistration(int studentId,int semesterId) throws StudentNotRegisteredException, StudentNotRegisteredException, FeesPendingException, StudentNotApprovedException;
 	
 	/**
 	 * @param professor
 	 */
-	public void addProfessor(Professor professor);
+	public void addProfessor(Professor professor) throws ProfessorNotAddedException;
 	
 	/**
 	 * @param professor
@@ -49,19 +46,19 @@ public interface AdminInterface {
 	 * @throws StudentNotApprovedException 
 	 * @throws FeesPendingException 
 	 */
-	public ReportCard generateReportCard(int studentID);
+	public ReportCard generateReportCard(int studentID) throws GradeNotAddedException, StudentNotApprovedException, FeesPendingException;
 	
 	/**
 	 * @param courseID
 	 * @param courseCatalog
 	 */
-	public void removeCourse(String courseID);
+	public void removeCourse(String courseID) throws CourseNotFoundException, CourseNotDeletedException;
 	
 	/**
 	 * @param courseID
 	 * @param courseCatalog
 	 */
-	public void addCourse(String course_name, String courseID, int semester);
+	public void addCourse(String course_name, String courseID, int semester) throws CourseAlreadyPresentException;
 
 	public HashMap<String, ArrayList<Integer>> viewCourseStudentList(String courseID, int semester, Boolean viewAll);
 

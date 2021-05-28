@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.flipkart.service;
 
 import java.sql.SQLException;
@@ -69,7 +66,7 @@ public class AdminOperation implements AdminInterface {
 		
 			ado.removeProfessor(professorID);
 		}
-		catch(ProfessorNotFoundException e) {
+		catch(ProfessorNotRegisteredException e) {
 			logger.error(e.getMessage());
 		}
 	}
@@ -78,8 +75,11 @@ public class AdminOperation implements AdminInterface {
 	public void removeCourse(String courseID) {
 
 		try {
+
 			ado.removeCourse(courseID);
+
 		}
+
 		catch(CourseNotFoundException e) {
 			logger.error(e.getMessage());
 		}
@@ -88,7 +88,7 @@ public class AdminOperation implements AdminInterface {
 
 	@Override
 	public void addCourse(String course_name, String courseID, int semester) {
-
+		// TODO Auto-generated method stub
 		Course newCourse = new Course();
 		newCourse.setCoursename(course_name);
 		newCourse.setCourseID(courseID);
@@ -109,9 +109,10 @@ public class AdminOperation implements AdminInterface {
 	public ReportCard generateReportCard(int studentID) {
 
 		ReportCard R = new ReportCard();
-
 		try {
+
 			R= ado.generateReportCard(studentID);
+
 		} catch (StudentNotApprovedException e) {
 			logger.error(e.getMessage());
 		}
