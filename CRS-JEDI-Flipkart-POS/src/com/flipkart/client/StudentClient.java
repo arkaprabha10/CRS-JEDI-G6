@@ -20,7 +20,6 @@ public class StudentClient {
 
     SemesterRegistrationInterface sro = SemesterRegistrationOperation.getInstance();
     StudentInterface so = StudentOperation.getInstance();
-    StudentDaoInterface sdo = StudentDaoOperation.getInstance();
 
     public static void main(String[] args) {
 //        StudentClient test = new StudentClient();
@@ -273,8 +272,11 @@ public class StudentClient {
     	ReportCard R = so.viewReportCard(studentID, semesterID);
     }
     
-    private int getStudentID(String username) throws StudentNotRegisteredException, SQLException {
+    private int getStudentID(String username){
 
-        return sdo.getStudentIDFromUserName(username);
+        int res = so.getStudentIDFromUserName(username);
+        assert res != -1;
+
+        return res;
 	}
 }

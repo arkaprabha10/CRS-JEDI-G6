@@ -10,9 +10,12 @@ import com.flipkart.bean.Student;
 import com.flipkart.dao.StudentDaoInterface;
 import com.flipkart.dao.StudentDaoOperation;
 import com.flipkart.exception.*;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 public class StudentOperation implements StudentInterface {
-	
+
+	private static final Logger logger = LogManager.getLogger(StudentOperation.class);
 	private static volatile StudentOperation instance=null;
 	StudentDaoInterface SDO =StudentDaoOperation.getInstance();
 
@@ -50,10 +53,7 @@ public class StudentOperation implements StudentInterface {
 	    		});
 
 		} catch (ReportCardNotGeneratedException | GradeNotAddedException | StudentNotApprovedException | FeesPendingException e) {
-			System.out.println(e.getMessage());
-		}
-		catch (SQLException e) {
-			System.out.println(e.getMessage());
+			logger.error(e.getMessage());
 		}
 
 		ReportCardOperation report = new ReportCardOperation();
@@ -85,31 +85,49 @@ public class StudentOperation implements StudentInterface {
 			}
 			System.out.println("=======================================");
 
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
+		} catch (StudentNotRegisteredException e) {
+			logger.error(e.getMessage());
 		}
 	}
 
 	@Override
-	public Student addStudent(String userName, String name, String password,String department ,String contactNumber, Integer joiningYear)
-			throws UserAlreadyInUseException, SQLException {
+	public Student addStudent(String userName, String name, String password,String department ,String contactNumber, Integer joiningYear) {
+
 		Student newStudent = new Student();
-		newStudent.setUserID(userName);
-		newStudent.setName(name);
-		newStudent.setPassword(password);
-		newStudent.setDepartment(department);
-		newStudent.setContactNumber(contactNumber);
-		newStudent.setJoiningYear(joiningYear);
-//		System.out.println("Student Made"+newStudent.getName());
-//		StudentDaoOperation sdo=new StudentDaoOperation();
-		SDO.addStudent(newStudent);
-		return newStudent;
+
+		try {
+			newStudent.setUserID(userName);
+			newStudent.setName(name);
+			newStudent.setPassword(password);
+			newStudent.setDepartment(department);
+			newStudent.setContactNumber(contactNumber);
+			newStudent.setJoiningYear(joiningYear);
+			SDO.addStudent(newStudent);
+
+			return newStudent;
+
+		} catch (UserAlreadyInUseException e) {
+			logger.error(e.getMessage());
+		}
+
+		return null;
+	}
+
+	public int getStudentIDFromUserName(String username) {
+
+		try {
+			return SDO.getStudentIDFromUserName(username);
+		} catch (StudentNotRegisteredException e) {
+			logger.error(e.getMessage());
+		}
+
+		return -1;
 	}
 	
-	public static void main(String[] args) throws UserAlreadyInUseException, SQLException, StudentNotRegisteredException, GradeNotAddedException, StudentNotApproved, FeesPendingException, StudentNotApprovedException {
+	public static void main(String[] args) {
 		System.out.println("Hey There!");
 		StudentOperation so = new StudentOperation();
-		
+
 //			so.addStudent("09.Charlie", "Drake", "6273","EE", "2538389027", 2021);
 //			List<Course> l=so.viewRegisteredCourses(1, 1);
 //			for (Course el: l ) {

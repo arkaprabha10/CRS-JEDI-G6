@@ -48,7 +48,10 @@ public interface StudentInterface {
 	 * @throws SQLException 
 	 */
 	public void viewRegisteredCourses(int studentID, int semesterId) throws StudentNotRegisteredException, SQLException;
-	
-	
 
+	/**
+	 * @param username
+	 * @return
+	 */
+	public int getStudentIDFromUserName(String username);
 }

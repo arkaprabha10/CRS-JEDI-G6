@@ -6,6 +6,8 @@ import com.flipkart.bean.Student;
 import com.flipkart.constants.SQLQueries;
 import com.flipkart.exception.*;
 import com.flipkart.utils.DBUtil;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,22 +17,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import com.flipkart.bean.Course;
-import com.flipkart.bean.ReportCard;
-import com.flipkart.bean.Student;
-import com.flipkart.constants.SQLQueries;
-import com.flipkart.exception.CourseNotAssignedException;
 //import com.flipkart.exception.ReportCardNotGeneratedException;
-import com.flipkart.exception.FeesPendingException;
-import com.flipkart.exception.GradeNotAddedException;
-import com.flipkart.exception.StudentNotApprovedException;
-import com.flipkart.exception.StudentNotRegisteredException;
-import com.flipkart.exception.UserAlreadyInUseException;
-import com.flipkart.service.StudentOperation;
-import com.flipkart.utils.DBUtil;
 
 public class StudentDaoOperation implements StudentDaoInterface {
 
+	private static final Logger logger = LogManager.getLogger(StudentDaoOperation.class);
 	private static volatile StudentDaoOperation instance=null;
 
 	StudentDaoOperation() {
@@ -50,7 +41,7 @@ public class StudentDaoOperation implements StudentDaoInterface {
 	}
 
 	@Override
-	public Student addStudent(Student student) throws SQLException, UserAlreadyInUseException{
+	public Student addStudent(Student student) throws UserAlreadyInUseException{
 		
 		Connection connection=DBUtil.getConnection();
 		
@@ -77,10 +68,8 @@ public class StudentDaoOperation implements StudentDaoInterface {
 			preparedStatement.executeUpdate();
 
 		}
-		catch(Exception ex)
-		{
-			System.out.println(ex.getMessage());
-//			throw new UserAlreadyInUseException();
+		catch(SQLException ex) {
+			throw new UserAlreadyInUseException();
 		}
 		return student;
 	}
@@ -122,8 +111,8 @@ public class StudentDaoOperation implements StudentDaoInterface {
 			R.setIsVisible(true);
 			R.setGrades(grades);
 				
-		} catch(SQLException ex) {
-			System.out.println(ex.getMessage());
+		} catch(SQLException e) {
+			logger.error(e.getMessage());
 		}
 
 		return R;
@@ -131,7 +120,7 @@ public class StudentDaoOperation implements StudentDaoInterface {
 
 	@Override
 	public List<Course> viewRegisteredCourses(int studentID, int semesterId)
-			throws SQLException, StudentNotRegisteredException {
+			throws StudentNotRegisteredException {
 		
 		Connection connection=DBUtil.getConnection();
 		
@@ -162,8 +151,8 @@ public class StudentDaoOperation implements StudentDaoInterface {
 			}
 		}
 		
-		catch(Exception ex) {
-			System.out.println(ex.getMessage());
+		catch(SQLException e) {
+			logger.error(e.getMessage());
 		}
 
 		if(registeredCourses.isEmpty()) {
@@ -175,7 +164,7 @@ public class StudentDaoOperation implements StudentDaoInterface {
 
 	@Override
 	
-	public int getStudentIDFromUserName(String username) throws StudentNotRegisteredException, SQLException {
+	public int getStudentIDFromUserName(String username) throws StudentNotRegisteredException {
 		
 		int studentID = -1;
 		
@@ -183,7 +172,6 @@ public class StudentDaoOperation implements StudentDaoInterface {
 		
 		try
 		{
-			//open db connection			
 			String Qry = "select * from student where user_name = ?";
 			PreparedStatement preparedStatement = connection.prepareStatement(Qry);
 			preparedStatement.setString(1, username);
@@ -198,12 +186,10 @@ public class StudentDaoOperation implements StudentDaoInterface {
 				throw new StudentNotRegisteredException();
 			}
 		}
-		catch(StudentNotRegisteredException ex) {
-			System.out.println(ex.getMessage());
+		catch(SQLException e) {
+			logger.error(e.getMessage());
 		}
 
 		return studentID;
 	}
-	
-
 }
