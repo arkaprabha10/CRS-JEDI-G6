@@ -42,33 +42,57 @@ import com.flipkart.service.ProfessorOperation;
 		@GET
 		@Path("/getRegisteredStudents")
 		@Produces(MediaType.APPLICATION_JSON)
-		public ArrayList<RegisteredCourses> viewRegisteredStudents(
+		public Response viewRegisteredStudents(
 				@NotNull
 				@QueryParam("courseId") String courseId){
 			
 			try {
-				return pI.viewCourseStudents(courseId, constants.SemesterID);
+				return Response.ok(pI.viewCourseStudents(courseId, constants.SemesterID),MediaType.APPLICATION_JSON).build();
 			} catch (SQLException | NoStudentInCourseException e) {
 				// TODO Auto-generated catch block
-				return null;
+				return Response.status(500).entity(e.getMessage()).build();
 			}
 			
 		}
 		
+//		public ArrayList<RegisteredCourses> viewRegisteredStudents(
+//				@NotNull
+//				@QueryParam("courseId") String courseId){
+//			
+//			try {
+//				return pI.viewCourseStudents(courseId, constants.SemesterID);
+//			} catch (SQLException | NoStudentInCourseException e) {
+//				// TODO Auto-generated catch block
+//				return null;
+//			}
+//			
+//		}
+		
 		@GET
 		@Path("/getCourses")
 		@Produces(MediaType.APPLICATION_JSON)
-		public ArrayList<Course> getCourses(
+		public Response getCourses(
 				@NotNull
 				@QueryParam("profId") Integer profId){
 			try {
-				return pI.viewCourseProf(profId);
+				return Response.ok(pI.viewCourseProf(profId),MediaType.APPLICATION_JSON).build();
 			}
 			catch (Exception e) {
-				return null;
+				return Response.status(500).entity(e.getMessage()).build();
 			}
 		
 		}
+//		public ArrayList<Course> getCourses(
+//				@NotNull
+//				@QueryParam("profId") Integer profId){
+//			try {
+//				return pI.viewCourseProf(profId);
+//			}
+//			catch (Exception e) {
+//				return null;
+//			}
+//		
+//		}
 		
 		@POST
 		@Path("/addGrade")
