@@ -14,7 +14,7 @@ public interface UserDaoInterface {
 	 * @param userID
 	 * @param password
 	 */
-	public void updatePassword(String userID, String password);
+	public void updatePassword(String userID, String password) throws UserNotFoundException;
 
 	/**
 	 * @param userID
@@ -27,14 +27,8 @@ public interface UserDaoInterface {
 	 * @param userID
 	 * @param number
 	 */
-	public void updateContactNumber(String userID, String number);
-	
-	/**
-	 * @param userID
-	 * @param role
-	 */
-	public void updateRole(String userID, String role);
-	
+	public void updateContactNumber(String userID, String number) throws UserNotFoundException;
+
 	/**
 	 * @param userID
 	 * @param password

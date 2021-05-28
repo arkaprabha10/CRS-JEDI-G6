@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.flipkart.service;
 
 import java.util.ArrayList;

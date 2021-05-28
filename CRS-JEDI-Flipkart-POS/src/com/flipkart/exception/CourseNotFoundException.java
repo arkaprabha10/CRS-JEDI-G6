@@ -37,7 +37,7 @@ public class CourseNotFoundException extends Exception {
 	
 	@Override
 	public String getMessage() {
-		return "CourseID: " + courseID + "is not present in course catalogue!";
+		return "CourseID: " + courseID + " is not present in course catalogue!";
 	}
 
 }

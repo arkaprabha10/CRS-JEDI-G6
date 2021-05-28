@@ -13,8 +13,11 @@ import java.util.Objects;
 import com.flipkart.bean.Course;
 import com.flipkart.bean.Payment;
 import com.flipkart.bean.RegisteredCourses;
-import com.flipkart.exception.CourseNotFoundException;
+import com.flipkart.constants.SQLQueries;
+import com.flipkart.exception.*;
 import com.flipkart.utils.DBUtil;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 /**
  * @author Asus
@@ -23,6 +26,7 @@ import com.flipkart.utils.DBUtil;
 public class SemesterRegistrationDaoOperation implements SemesterRegistrationDaoInterface{
 	private static volatile SemesterRegistrationDaoOperation instance=null;
 	private static Connection conn = DBUtil.getConnection();
+	private static final Logger logger = LogManager.getLogger(SemesterRegistrationDaoOperation.class);
 
 	private SemesterRegistrationDaoOperation(){
 
@@ -52,7 +56,8 @@ public class SemesterRegistrationDaoOperation implements SemesterRegistrationDao
 	}
 
 	@Override
-	public boolean addCourse(int studentId, int semesterId, String courseId, boolean isPrimary) {
+	public boolean addCourse(int studentId, int semesterId, String courseId, boolean isPrimary) throws CourseNotFoundException, CourseSeatsUnavailableException, CourseExistsInCartException {
+
 
 		PreparedStatement stmt;
 		Course courseObj;
@@ -66,17 +71,14 @@ public class SemesterRegistrationDaoOperation implements SemesterRegistrationDao
 			}
 
 			if(courseObj.getAvailableSeats() <= 0) {
-//				throw exception for no seats
-//				to do : create an exception for this
+				throw new CourseSeatsUnavailableException(courseId);
 			}
 
 			if(checkRegisteredCourseExists(studentId, semesterId, courseId)) {
-//				throw exception for duplication
-// 				to do : create an exception for this
-				throw new Exception("Course already added to cart!");
+				throw new CourseExistsInCartException(courseId);
 			}
 
-			String query = "INSERT INTO registered_courses VALUES (?,?,?,?,?,?,?)";
+			String query = SQLQueries.REGISTRATION_ADD_COURSE;
 
 			stmt = conn.prepareStatement(query);
 			stmt.setInt(1, studentId);
@@ -93,11 +95,7 @@ public class SemesterRegistrationDaoOperation implements SemesterRegistrationDao
 			return true;
 
 		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (CourseNotFoundException e) {
-			System.out.println(e.getMessage());
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			logger.error(e.getMessage());
 		}
 
 		return false;
@@ -109,7 +107,7 @@ public class SemesterRegistrationDaoOperation implements SemesterRegistrationDao
 
 		try {
 
-			String query = "SELECT * FROM course_catalog WHERE courseID = ? AND offered_semester = ?";
+			String query = SQLQueries.REGISTRATION_GET_COURSES;
 
 			stmt = conn.prepareStatement(query);
 			stmt.setString(1, courseId);
@@ -132,7 +130,7 @@ public class SemesterRegistrationDaoOperation implements SemesterRegistrationDao
 			return courseObj;
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 
 		return null;
@@ -143,7 +141,7 @@ public class SemesterRegistrationDaoOperation implements SemesterRegistrationDao
 
 		try {
 
-			String query = "SELECT COUNT(1) FROM registered_courses WHERE student_id = ? AND course_id = ? AND semester_id = ?";
+			String query = SQLQueries.REGISTRATION_COURSE_EXISTS;
 
 			stmt = conn.prepareStatement(query);
 			stmt.setInt(1, studentId);
@@ -157,8 +155,8 @@ public class SemesterRegistrationDaoOperation implements SemesterRegistrationDao
 				return true;
 			}
 
-		} catch (SQLException ex) {
-			ex.printStackTrace();
+		} catch (SQLException e) {
+			logger.error(e.getMessage());
 		}
 
 		return false;
@@ -172,7 +170,8 @@ public class SemesterRegistrationDaoOperation implements SemesterRegistrationDao
 		try {
 
 			int currentAvailableSeats = Objects.requireNonNull(getCourseDetails(courseId, semesterId)).getAvailableSeats();
-			String query = "UPDATE course_catalog SET available_seats = ? WHERE  courseID = ? AND offered_semester = ?";
+
+			String query = SQLQueries.REGISTRATION_UPDATE_SEATS;
 
 			int seatChange =  (change == 0 ? -1 : 1);
 
@@ -182,13 +181,13 @@ public class SemesterRegistrationDaoOperation implements SemesterRegistrationDao
 			stmt.setInt(3, semesterId);
 			stmt.executeUpdate();
 
-		} catch (SQLException ex) {
-			ex.printStackTrace();
+		} catch (SQLException e) {
+			logger.error(e.getMessage());
 		}
 	}
 
 	@Override
-	public boolean dropCourse(int studentId, int semesterId, String courseId) {
+	public boolean dropCourse(int studentId, int semesterId, String courseId) throws CourseNotInCart, CourseNotFoundException {
 
 		PreparedStatement stmt;
 		Course courseObj;
@@ -202,12 +201,10 @@ public class SemesterRegistrationDaoOperation implements SemesterRegistrationDao
 			}
 
 			if(!checkRegisteredCourseExists(studentId, semesterId, courseId)) {
-//				throw exception for dropping not registered course
-// 				to do : create an exception for this
-				throw new Exception("Course not in cart.");
+				throw new CourseNotInCart(courseId);
 			}
 
-			String query = "DELETE FROM registered_courses WHERE student_id = ? AND course_id = ? AND semester_id = ?";
+			String query = SQLQueries.REGISTRATION_DROP_COURSE;
 
 			stmt = conn.prepareStatement(query);
 			stmt.setInt(1, studentId);
@@ -220,24 +217,20 @@ public class SemesterRegistrationDaoOperation implements SemesterRegistrationDao
 			return true;
 
 		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (CourseNotFoundException e) {
-			System.out.println(e.getMessage());
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			logger.error(e.getMessage());
 		}
 
 		return false;
 	}
 
 	@Override
-	public boolean finishRegistration(int studentId, int semesterId) {
+	public boolean finishRegistration(int studentId, int semesterId) throws InvalidSemesterRegistration{
 
 		PreparedStatement stmt;
 
 		try {
 
-			String query = "SELECT * FROM registered_courses WHERE student_id = ? AND semester_id = ?";
+			String query = SQLQueries.REGISTRATION_FINISH_REG;
 
 			stmt = conn.prepareStatement(query);
 			stmt.setInt(1, studentId);
@@ -266,46 +259,14 @@ public class SemesterRegistrationDaoOperation implements SemesterRegistrationDao
 			}
 
 			else {
-//				throw exception for invalid number of courses
+				throw new InvalidSemesterRegistration();
 			}
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 
 		return false;
-	}
-
-
-	@Override
-	public RegisteredCourses viewRegisteredCourses(int studentId, int semesterId) {
-
-		PreparedStatement stmt;
-		RegisteredCourses regCourses = null;
-
-		try {
-
-			String query = "SELECT * FROM registered_courses WHERE student_id = ? AND semester_id = ?";
-
-			stmt = conn.prepareStatement(query);
-			stmt.setInt(1, studentId);
-			stmt.setInt(2, semesterId);
-			ResultSet rs = stmt.executeQuery();
-
-			ArrayList<String> courseID = new ArrayList<>();
-
-			while(rs.next()) {
-				courseID.add(rs.getString("course_id"));
-			}
-			
-			regCourses = new RegisteredCourses(studentId, semesterId, courseID);
-
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return regCourses;
 	}
 
 	@Override
@@ -316,7 +277,8 @@ public class SemesterRegistrationDaoOperation implements SemesterRegistrationDao
 
 		try {
 
-			String query = "SELECT * FROM course_catalog";
+
+			String query = SQLQueries.REGISTRATION_GET_ALL_COURSES;
 
 			stmt = conn.prepareStatement(query);
 			ResultSet rs = stmt.executeQuery();
@@ -334,22 +296,10 @@ public class SemesterRegistrationDaoOperation implements SemesterRegistrationDao
 				courseCatalog.add(course);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+
+			logger.error(e.getMessage());
 		}
 
 		return courseCatalog;
 	}
-
-	@Override
-	public int calculateFees(int studentId, int semesterId) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public Payment payFees(int studentId, int semesterId, String paymentMode) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

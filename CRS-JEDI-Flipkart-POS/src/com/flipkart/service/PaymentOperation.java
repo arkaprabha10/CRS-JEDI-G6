@@ -12,6 +12,8 @@ import com.flipkart.dao.PaymentDaoOperation;
 import com.flipkart.dao.UserDaoInterface;
 import com.flipkart.dao.UserDaoOperation;
 import com.flipkart.exception.PaymentFailedException;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 /**
  * @author Asus
@@ -19,12 +21,17 @@ import com.flipkart.exception.PaymentFailedException;
  */
 public class PaymentOperation implements PaymentInterface{
 
-	@Override
-	public void makePayment(Payment payment) throws PaymentFailedException {
-		
-		PaymentDaoInterface paymentObj = new PaymentDaoOperation();
+	private static final Logger logger = LogManager.getLogger(PaymentOperation.class);
 
-		paymentObj.makePayment(payment);
+	@Override
+	public void makePayment(Payment payment) {
+
+		try {
+			PaymentDaoInterface paymentObj = new PaymentDaoOperation();
+			paymentObj.makePayment(payment);
+		} catch (PaymentFailedException e) {
+			logger.error(e.getMessage());
+		}
 	}
 
 }

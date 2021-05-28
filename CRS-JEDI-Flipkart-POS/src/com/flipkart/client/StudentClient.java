@@ -20,7 +20,6 @@ public class StudentClient {
 
     SemesterRegistrationInterface sro = SemesterRegistrationOperation.getInstance();
     StudentInterface so = StudentOperation.getInstance();
-    StudentDaoInterface sdo = StudentDaoOperation.getInstance();
 
     public static void main(String[] args) {
 //        StudentClient test = new StudentClient();
@@ -147,7 +146,6 @@ public class StudentClient {
         payment.setStudentID(studentID);
 
         try {
-        	finishedRegistration=true;
             if(!finishedRegistration) {
                 throw new Exception("You registration is incomplete!");
             }
@@ -204,8 +202,6 @@ public class StudentClient {
 
     private void dropCourse() {
 
-//        SemesterRegistrationOperation sro = new SemesterRegistrationOperation();
-
         System.out.println("=======================================");
         System.out.println("Delete Course");
         System.out.println("Enter course ID: ");
@@ -215,17 +211,8 @@ public class StudentClient {
         boolean courseDropped = false;
 		try {
 			courseDropped = sro.dropCourse(studentID, 1, courseID);
-		} catch (CourseNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (CourseNotDeletedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (StudentNotRegisteredException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -239,8 +226,6 @@ public class StudentClient {
 
     private void addCourse() {
 
-//        SemesterRegistrationOperation sro = new SemesterRegistrationOperation();
-
     	System.out.println("=======================================");
         System.out.println("Add Course");
         System.out.println("Enter course ID: ");
@@ -253,20 +238,8 @@ public class StudentClient {
         boolean courseAdded = false;
 		try {
 			courseAdded = sro.addCourse(studentID, 1, courseID, isPrimary);
-		} catch (CourseNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (CourseNotAssignedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (CourseAlreadyRegisteredException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (CourseLimitExceededException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (StudentNotRegisteredException e) {
-			// TODO Auto-generated catch block
+		} catch (Exception e) {
+
 			e.printStackTrace();
 		}
 
@@ -280,17 +253,12 @@ public class StudentClient {
 
     private void viewAvailableCourses() {
 
-//        SemesterRegistrationOperation sro = new SemesterRegistrationOperation();
         ArrayList<Course> courseCatalog = null;
-		try {
-			courseCatalog = sro.viewAvailableCourses();
-		} catch (StudentNotRegisteredException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        courseCatalog = sro.viewAvailableCourses();
+
         System.out.println("Course catalog : ");
         for(Course c : courseCatalog) {
-            System.out.println("Course ID : "+c.getCourseID()+" \t Course Name : "+ c.getCoursename()+"\t Instructor : "+c.getInstructorID());
+            System.out.println("Course ID : "+c.getCourseID()+" \t Course Name : "+ c.getCoursename()+"\t Instructor : "+c.getInstructorID()+"\t Available seats : "+c.getAvailableSeats());
         }
     }
 
@@ -300,14 +268,15 @@ public class StudentClient {
     }
 
     private void viewGradeCard(int studentID, int semesterID) throws SQLException, GradeNotAddedException, StudentNotApproved, FeesPendingException, StudentNotApprovedException {
-//    	StudentOperation so = new StudentOperation();
+
     	ReportCard R = so.viewReportCard(studentID, semesterID);
-    	
     }
     
-    private int getStudentID(String username) throws StudentNotRegisteredException, SQLException {
-		
-//    	StudentDaoOperation sdo = new StudentDaoOperation();
-        return sdo.getStudentIDFromUserName(username);
+    private int getStudentID(String username){
+
+        int res = so.getStudentIDFromUserName(username);
+        assert res != -1;
+
+        return res;
 	}
 }

@@ -29,7 +29,7 @@ public interface SemesterRegistrationInterface {
 	 * @param courseId 
 	 * @return the course if it is added successfully, else null
 	 */
-	public boolean addCourse(int studentId, int semesterId, String courseId, boolean isPrimary) throws CourseNotFoundException, CourseNotAssignedException, CourseAlreadyRegisteredException, CourseLimitExceededException, StudentNotRegisteredException;
+	public boolean addCourse(int studentId, int semesterId, String courseId, boolean isPrimary);
 	
 	/**
 	 * Method to drop Course selected by student 
@@ -38,30 +38,15 @@ public interface SemesterRegistrationInterface {
 	 * @param courseId 
 	 * @return Boolean value indicating if it is was dropped successfully
 	 */
-	public boolean dropCourse(int studentId, int semesterId, String courseId) throws CourseNotFoundException, CourseNotDeletedException ,StudentNotRegisteredException;
-	
-	/**
-	 * Method to view Courses registered by student 
-	 * @param studentId
-	 * @param semesterId 
-	 * @return list of student's registered courses
-	 */
-	public RegisteredCourses viewRegisteredCourses(int studentId, int semesterId) throws StudentNotRegisteredException;
+
+	public boolean dropCourse(int studentId, int semesterId, String courseId);
 	
 	/**
 	 * Method to view all courses available
 	 * @return list of all courses with availbale seats
 	 */
-	public ArrayList<Course> viewAvailableCourses() throws StudentNotRegisteredException;
-	
-	
-	/**
-	 * Method to calculate student Fees
-	 * @param studentId
-	 * @param semesterId
-	 * @return total fees to be paid by the student
-	 */
-	public int calculateFees(int studentId, int semesterId) ;
+
+	public ArrayList<Course> viewAvailableCourses();
 
 	/**
 	 * @param studentId
@@ -69,16 +54,4 @@ public interface SemesterRegistrationInterface {
 	 * @return
 	 */
 	public boolean finishRegistration(int studentId, int semesterId);
-	
-	
-	/**
-	 * Method to pay student Fees
-	 * @param studentId
-	 * @param semesterId
-	 * @param paymentMode 
-	 * @return Boolean value indicating if payment was successful
-	 */
-	public Payment payFees(int studentId, int semesterId, String paymentMode) ;
-	
-	
 }
