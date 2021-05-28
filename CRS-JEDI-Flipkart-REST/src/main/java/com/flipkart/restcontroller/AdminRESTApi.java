@@ -127,7 +127,7 @@ public class AdminRESTApi {
 	@Path("/generatereportcard")
 	@Consumes("application/json")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response generateReportCard(int studentID) {
+	public Response generateReportCard(@NotNull @QueryParam("studentId") int studentID ) {
 		
 		try {
 			ao.generateReportCard(studentID);
@@ -145,7 +145,7 @@ public class AdminRESTApi {
 	@Path("/approvestudentregistration")
 	@Consumes("application/json")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response approveStudentRegistration(int studentID) {
+	public Response approveStudentRegistration(@NotNull @QueryParam("studentId") int studentID) {
 		
 		try {
 			ao.approveStudentRegistration(studentID,constants.SemesterID);
