@@ -2,21 +2,32 @@ package com.flipkart.service;
 
 import com.flipkart.dao.UserDaoOperation;
 import com.flipkart.exception.UserNotFoundException;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 public class UserOperation implements UserInterface{
 
+	private static final Logger logger = LogManager.getLogger(UserOperation.class);
 	private final UserDaoOperation userDao = UserDaoOperation.getInstance();
 
 	@Override
 	public void updatePassword(String userID, String password) {
 
-		userDao.updatePassword(userID, password);
+		try {
+			userDao.updatePassword(userID, password);
+		} catch (UserNotFoundException e) {
+			logger.error(e.getMessage());
+		}
 	}
 
 	@Override
 	public void updateContactNumber(String userID, String number) {
 
-		userDao.updateContactNumber(userID, number);
+		try {
+			userDao.updateContactNumber(userID, number);
+		} catch (UserNotFoundException e) {
+			logger.error(e.getMessage());
+		}
 	}
 
 	@Override
@@ -27,7 +38,13 @@ public class UserOperation implements UserInterface{
 
 	public String getRole(String userID) {
 
-		return userDao.getUserRole(userID);
+		try {
+			return userDao.getUserRole(userID);
+		} catch (UserNotFoundException e) {
+			logger.error(e.getMessage());
+		}
+
+		return null;
 	}
 
 	@Override

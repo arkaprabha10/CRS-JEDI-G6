@@ -29,7 +29,7 @@ public class PaymentDaoOperation implements PaymentDaoInterface{
 
 	private static final Logger logger = LogManager.getLogger(PaymentDaoOperation.class);
 	private static volatile PaymentDaoOperation instance=null;
-	private Connection connection=DBUtil.getConnection();
+	private final Connection connection=DBUtil.getConnection();
 	
 	public static void main(String[] args) throws SQLException {
 		PaymentDaoOperation test = new PaymentDaoOperation();
@@ -38,10 +38,16 @@ public class PaymentDaoOperation implements PaymentDaoInterface{
 	@Override
 	public void makePayment(Payment payment) throws PaymentFailedException {
 
-		payment.setPaymentID(getNewTransactionID());
-		PreparedStatement statement;
-
 		try {
+
+			int newID = getNewTransactionID();
+
+			if(newID == -1) {
+				throw new Exception();
+			}
+
+			payment.setPaymentID(newID);
+			PreparedStatement statement;
 
 			String sql = "INSERT INTO payments(studentId, amount, transactionId, paymentType, isPaid) VALUES (?, ?, ?, ?, ?)";
 			statement = connection.prepareStatement(sql);
@@ -65,8 +71,7 @@ public class PaymentDaoOperation implements PaymentDaoInterface{
 			System.out.println("|   Student ID: " + payment.getStudentID());
 			System.out.println("|   Amount    : " + "1000");
 			System.out.println("+-----------------------------------+");
-			
-//			System.out.println( payment.getStudentID()+constants.COURSE_AMOUNT );
+
 		} catch (Exception e) {
 			throw new PaymentFailedException();
 		}
@@ -78,7 +83,6 @@ public class PaymentDaoOperation implements PaymentDaoInterface{
 
 		try
 		{
-			//open db connection
 			String query = "SELECT MAX(transactionId) FROM payments";
 			PreparedStatement stmt = connection.prepareStatement(query);
 			ResultSet rs = stmt.executeQuery();
@@ -88,15 +92,10 @@ public class PaymentDaoOperation implements PaymentDaoInterface{
 			}
 		}
 		catch(Exception ex) {
-			System.out.println(ex.getMessage());
+			logger.error(ex.getMessage());
 		}
 
 		return newTransactionID;
-	}
-
-	private void updateRegisteredCoursesPayment() {
-
-		// to do
 	}
 
 	public static PaymentDaoOperation getInstance()

@@ -2,6 +2,8 @@ package com.flipkart.dao;
 
 import com.flipkart.exception.UserNotFoundException;
 import com.flipkart.utils.DBUtil;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,6 +12,8 @@ import java.sql.SQLException;
 import java.util.Objects;
 
 public class UserDaoOperation implements UserDaoInterface{
+
+	private static final Logger logger = LogManager.getLogger(UserDaoOperation.class);
 	private static volatile UserDaoOperation instance=null;
 	private static final Connection conn = DBUtil.getConnection();
 	private static final String[] roleList = {"professor", "student", "admin"};
@@ -30,18 +34,18 @@ public class UserDaoOperation implements UserDaoInterface{
 		return instance;
 	}
 
-	public static void main(String[] args) throws SQLException {
+	public static void main(String[] args) {
 		UserDaoInterface test = new UserDaoOperation();
 
-		test.updatePassword("aaa", "aaa");
-		test.updateContactNumber("aaa", "999");
+//		test.updatePassword("aaa", "aaa");
+//		test.updateContactNumber("aaa", "999");
 		//System.out.println(test.loginUser("aaa", "bbb"));
 	}
 
 
 
 	@Override
-	public void updatePassword(String userID, String newPassword) {
+	public void updatePassword(String userID, String newPassword) throws UserNotFoundException {
 
 		PreparedStatement queryStatement;
 
@@ -60,23 +64,17 @@ public class UserDaoOperation implements UserDaoInterface{
 			queryStatement.executeUpdate();
 
 
-		} catch (UserNotFoundException ex) {
-			System.out.println(ex.getMessage());
 		}
 		catch (SQLException ex) {
-			ex.printStackTrace();
+			logger.error(ex.getMessage());
 		}
 	}
 
 	@Override
-	public String getUserRole(String userID) {
+	public String getUserRole(String userID) throws UserNotFoundException {
 
-		try {
-			if(userRole == null) {
-				assignUserRole(userID);
-			}
-		} catch (UserNotFoundException ex) {
-			System.out.println(ex.getMessage());
+		if(userRole == null) {
+			assignUserRole(userID);
 		}
 
 		return userRole;
@@ -111,12 +109,12 @@ public class UserDaoOperation implements UserDaoInterface{
 			}
 
 		} catch (SQLException ex) {
-			ex.printStackTrace();
+			logger.error(ex.getMessage());
 		}
 	}
 
 	@Override
-	public void updateContactNumber(String userID, String newNumber) {
+	public void updateContactNumber(String userID, String newNumber) throws UserNotFoundException {
 
 		PreparedStatement queryStatement;
 
@@ -135,18 +133,10 @@ public class UserDaoOperation implements UserDaoInterface{
 			queryStatement.executeUpdate();
 
 
-		} catch (UserNotFoundException ex) {
-			System.out.println(ex.getMessage());
 		}
 		catch (SQLException ex) {
-			ex.printStackTrace();
+			logger.error(ex.getMessage());
 		}
-	}
-
-	@Override
-	public void updateRole(String userID, String role) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
