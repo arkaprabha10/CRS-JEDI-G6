@@ -58,6 +58,7 @@ public class ProfessorDaoOperation implements ProfessorDaoInterface {
 	 * @throws GradeNotAddedException,StudentNotRegisteredException
 	 */
 
+	@Override
 	public void addGrade(Integer studentID, Integer semesterID, String courseID, Integer grade) throws GradeNotAddedException,StudentNotRegisteredException {
 		
 		Connection connection=DBUtil.getConnection();
@@ -110,6 +111,7 @@ public class ProfessorDaoOperation implements ProfessorDaoInterface {
 	 * @throws NoStudentInCourseException
 	 */
 
+	@Override
 	public ArrayList<RegisteredCourses> viewCourseStudents(String courseID, Integer semesterID) throws NoStudentInCourseException{
 		Connection connection=DBUtil.getConnection();
 		try {
@@ -149,6 +151,7 @@ public class ProfessorDaoOperation implements ProfessorDaoInterface {
 	 * @return the enrolled students for the corresponding professor and course code.
 	 * @throws ProfessorNotAssignedException
 	 */
+	@Override
 	public ArrayList<Course> viewCourseProf(Integer instructorID) throws ProfessorNotAssignedException {
 
 		ArrayList<Course>ans = new ArrayList<Course>();
@@ -174,8 +177,6 @@ public class ProfessorDaoOperation implements ProfessorDaoInterface {
 			}
 		} catch(SQLException e) {
 
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
 		}
 
 		return ans;
@@ -189,6 +190,7 @@ public class ProfessorDaoOperation implements ProfessorDaoInterface {
 	 * @return true if Successfully registered else false
 	 * @throws Exception 
 	 */
+	@Override
 	public Boolean registerCourse(Integer instructorID, Integer semesterID, String courseID) throws Exception{
 
 		

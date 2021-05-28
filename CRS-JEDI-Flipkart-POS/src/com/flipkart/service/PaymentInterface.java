@@ -26,6 +26,6 @@ public interface PaymentInterface {
 	 * @return
 	 * @throws PaymentFailedException
 	 */
-	public void makePayment(Payment payment) throws PaymentFailedException;
+	public void makePayment(Payment payment);
 	
 }

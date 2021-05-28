@@ -4,12 +4,13 @@ import java.util.Scanner;
 import java.util.Set;
 import java.util.TreeSet;
 
+import com.flipkart.bean.Student;
 import com.flipkart.service.StudentOperation;
 import com.flipkart.service.UserOperation;
 
 public class UserClient {
+
     private Scanner sc = new Scanner(System.in);
-    
     StudentOperation so = StudentOperation.getInstance();
     
 
@@ -158,13 +159,16 @@ public class UserClient {
             contact = sc.nextLine();
             System.out.println("=======================================");
             
-            so.addStudent(username, name, password, department, contact, Integer.parseInt(joiningYear));
-            
-            System.out.println("User Added Successfully");
-            System.out.println("=======================================");
+            Student stud = so.addStudent(username, name, password, department, contact, Integer.parseInt(joiningYear));
 
-            // to do : create student bean
-
+            if(stud == null) {
+                System.out.println("User Was not added");
+                System.out.println("=======================================");
+            }
+            else {
+                System.out.println("User Added Successfully");
+                System.out.println("=======================================");
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
