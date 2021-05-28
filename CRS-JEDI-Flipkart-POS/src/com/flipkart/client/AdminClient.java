@@ -37,7 +37,7 @@ public class AdminClient {
                 System.out.println("---------------------------------------");
                 System.out.println("1 : Edit course details");
                 System.out.println("2 : Generate report card");
-                System.out.println("3 : Approve student registration");
+                System.out.println("3 : Approve student semester registration");
                 System.out.println("4 : Add Professor");
                 System.out.println("5 : Remove Professor");
                 System.out.println("6 : View Course Wise student list");
@@ -85,14 +85,15 @@ public class AdminClient {
     private void approvePendingStudentAccounts() {
 		
     	List<Student> pendingStudents = ao.getPendingStudentAccountsList();
-    	
-    	System.out.println("List of Students with Pending Account Approval : ");
-    	System.out.println();
-    	System.out.println("Student ID\t Name\t Department\t Joining Year\t Contact Number");
-    	for(Student st: pendingStudents) {
-    		System.out.println(st.getStudentID()+"\t"+st.getName()+"\t"+st.getDepartment()+"\t"+st.getJoiningYear()+"\t"+st.getContactNumber());
+    	if(!pendingStudents.isEmpty()) {
+    		System.out.println("List of Students with Pending Account Approval : ");
+        	System.out.println();
+        	System.out.println("Student ID\t Name\t Department\t Joining Year\t Contact Number");
+        	for(Student st: pendingStudents) {
+        		System.out.println(st.getStudentID()+"\t"+st.getName()+"\t"+st.getDepartment()+"\t"+st.getJoiningYear()+"\t"+st.getContactNumber());
+        	}
     	}
-    	
+
     	System.out.println("\n Enter the Student ID for the Student Account you want to approve : ");
 		Integer studentID = sc.nextInt();
 		sc.nextLine();
@@ -224,6 +225,9 @@ public class AdminClient {
 
 		if(R.getSpi() > 0)
         System.out.println("Student ID : "+studentID+"    SPI : "+ R.getSpi());
+		else {
+			System.out.println("Report Card not generated!!");
+		}
     }
 
     private void editCourseList() {
@@ -292,7 +296,7 @@ public class AdminClient {
             ao.addCourse(course_name, courseID, offeredSemester);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
 }

@@ -21,8 +21,8 @@ public class ReportCard {
 	
 	public ReportCard() {
 		// TODO Auto-generated constructor stub
-		spi = (float) 10.0;
-		studentID = 0;
+		spi = (float) 0.0;
+		studentID = -1;
 		semesterID = 1;
 		isVisible = false;
 	}

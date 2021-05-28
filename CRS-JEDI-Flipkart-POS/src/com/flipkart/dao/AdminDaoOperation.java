@@ -18,9 +18,7 @@ import com.flipkart.bean.ReportCard;
 import com.flipkart.bean.Student;
 import com.flipkart.constants.SQLQueries;
 import com.flipkart.constants.constants;
-import com.flipkart.exception.FeesPendingException;
-import com.flipkart.exception.GradeNotAddedException;
-import com.flipkart.exception.StudentNotApprovedException;
+import com.flipkart.exception.*;
 import com.flipkart.service.ReportCardOperation;
 import com.flipkart.service.StudentOperation;
 import com.flipkart.utils.DBUtil;
@@ -69,9 +67,12 @@ public class AdminDaoOperation implements AdminDaoInterface {
 		
 		try {
 			statement = connection.prepareStatement(SQLQueries.GET_STUDENT_BY_ID(studentId, semesterId));
-						
 			ResultSet rs = statement.executeQuery();
-			rs.next();
+			if(!rs.next()) {
+				throw new StudentNotApprovedException(studentId);
+			}
+			else {
+			
 			Boolean primary4 = true;
 			Boolean fees = true;
 			List<String> primary_course_ids = new ArrayList<String>();
@@ -97,11 +98,12 @@ public class AdminDaoOperation implements AdminDaoInterface {
 			PreparedStatement update_statement = connection.prepareStatement(SQLQueries.APPROVE_STUDENT(studentId, semesterId));
 
 			update_statement.executeUpdate();
-			
+		}	
 		} catch (SQLException e) {
-			logger.error(e.getMessage());
+			logger.error("Student is not present in the list!");
 		}
-	}
+			
+}
 
 	@Override
 	public void addProfessor(Professor professor){
@@ -136,13 +138,12 @@ public class AdminDaoOperation implements AdminDaoInterface {
 			System.out.println(row + " user added.");
 			
 		} catch (SQLException e) {
-
-			logger.error(e.getMessage());
+			logger.error("Professor is already present in the list!");
 		}
 	}
 
 	@Override
-	public void removeProfessor(int professorID) {
+	public void removeProfessor(int professorID) throws ProfessorNotFoundException{
 		// TODO Auto-generated method stub
 
 		String sql = SQLQueries.ADMIN_REMOVE_PROFESSOR;
@@ -154,11 +155,16 @@ public class AdminDaoOperation implements AdminDaoInterface {
 			statement.setInt(1, professorID);
 			
 			int row = statement.executeUpdate();
+			if(row==0) {
+				throw new ProfessorNotFoundException(professorID);
+			}
+			else {
 			
-			System.out.println(row + " user deleted.");
+				System.out.println(row + " user deleted.");
+			}
+			
 			
 		} catch (SQLException e) {
-
 			logger.error(e.getMessage());
 		}
 	}
@@ -196,8 +202,7 @@ public class AdminDaoOperation implements AdminDaoInterface {
 	}
 
 	@Override
-	public void removeCourse(String courseID) {
-		// TODO Auto-generated method stub
+	public void removeCourse(String courseID) throws CourseNotFoundException {
 
 		String sql = SQLQueries.ADMIN_REMOVE_COURSE;
 
@@ -208,11 +213,19 @@ public class AdminDaoOperation implements AdminDaoInterface {
 			statement.setString(1, courseID);
 			
 			int row = statement.executeUpdate();
+			if(row == 0) {
 			
-			System.out.println(row + " course deleted.");
+				throw new CourseNotFoundException(courseID);
+			}
+			else {
+			
+				System.out.println(row + " course deleted.");
+			}
+			
 			
 		} catch (SQLException e) {
-			logger.error(e.getMessage());
+			
+//			logger.error(e.getMessage());
 		}
 		
 	}
@@ -236,7 +249,7 @@ public class AdminDaoOperation implements AdminDaoInterface {
 			System.out.println(row + " course added.");
 			
 		} catch (SQLException e) {
-			logger.error(e.getMessage());
+			logger.error("Course is already present in the list!");
 		}
 		
 	}
@@ -296,7 +309,9 @@ public class AdminDaoOperation implements AdminDaoInterface {
 			statement = connection.prepareStatement(SQLQueries.GET_PENDING_STUDENT);
 						
 			ResultSet rs = statement.executeQuery();
-			rs.next();
+			if(!rs.next()  ) {
+				logger.error("No pending student!!!");
+			}
 			
 			do {
 				Student student = new Student();
@@ -312,7 +327,7 @@ public class AdminDaoOperation implements AdminDaoInterface {
 				
 				
 		} catch (SQLException e) {
-			logger.error(e.getMessage());
+//			logger.error(e.getMessage());
 		}
 		return pendingStudents;
 	}
@@ -330,7 +345,7 @@ public class AdminDaoOperation implements AdminDaoInterface {
 			System.out.println("Student ID: "+studentId+" Approved !");
 				
 		} catch (SQLException e) {
-			logger.error(e.getMessage());
+			logger.error("Student is not present in the list!");
 		}
 	}
 

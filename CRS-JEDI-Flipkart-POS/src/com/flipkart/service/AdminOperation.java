@@ -52,7 +52,7 @@ public class AdminOperation implements AdminInterface {
 
 		try {
 			ado.approveStudentRegistration(studentId,semesterId);
-		} catch (FeesPendingException | StudentNotApprovedException | StudentNotRegisteredException e) {
+		} catch (FeesPendingException | StudentNotApprovedException e) {
 			logger.error(e.getMessage());
 		}
 	}
@@ -60,49 +60,42 @@ public class AdminOperation implements AdminInterface {
 	@Override
 	public void addProfessor(Professor professor) {
 
-		try {
-			ado.addProfessor(professor);
-		} catch (ProfessorAlreadyPresentException e) {
-			logger.error(e.getMessage());
-		}
+		ado.addProfessor(professor);
 	}
 
 	@Override
 	public void removeProfessor(int professorID) {
-
 		try {
+		
 			ado.removeProfessor(professorID);
-		} catch (ProfessorNotFoundException e) {
+		}
+		catch(ProfessorNotFoundException e) {
 			logger.error(e.getMessage());
 		}
 	}
-
 
 	@Override
 	public void removeCourse(String courseID) {
 
 		try {
 			ado.removeCourse(courseID);
-		} catch (CourseNotFoundException e) {
+		}
+		catch(CourseNotFoundException e) {
 			logger.error(e.getMessage());
 		}
 	}
+	
 
 	@Override
 	public void addCourse(String course_name, String courseID, int semester) {
 
-		try {
-			Course newCourse = new Course();
-			newCourse.setCoursename(course_name);
-			newCourse.setCourseID(courseID);
-			newCourse.setOfferedSemester(semester);
-			newCourse.setAvailableSeats(10);
+		Course newCourse = new Course();
+		newCourse.setCoursename(course_name);
+		newCourse.setCourseID(courseID);
+		newCourse.setOfferedSemester(semester);
+		newCourse.setAvailableSeats(10);
 
-			ado.addCourse(newCourse);
-		} catch (CourseAlreadyPresentException e) {
-			logger.error(e.getMessage());
-		}
-
+		ado.addCourse(newCourse);
 	}
 
 	
@@ -119,7 +112,7 @@ public class AdminOperation implements AdminInterface {
 
 		try {
 			R= ado.generateReportCard(studentID);
-		} catch (GradeNotAddedException | StudentNotApprovedException | FeesPendingException e) {
+		} catch (StudentNotApprovedException e) {
 			logger.error(e.getMessage());
 		}
 		return R;
