@@ -7,21 +7,21 @@ package com.flipkart.exception;
  * @author Dell
  *
  */
+public class NoStudentInCourseException extends Exception{
 
-//Exception arises when course doesnt exist in the course catalog
-
-public class CourseNotFoundException extends Exception {
-	private String courseID;
+// Exception arises when there is no student in a course
+private String courseID;
 	
-	public CourseNotFoundException() {
+	public NoStudentInCourseException() {
 		// TODO Auto-generated constructor stub
-	courseID = "";
+	
+		courseID = "";
 	}
 	
 	/**
 	 * @param courseID
 	 */
-	public CourseNotFoundException(String courseID) {
+	public NoStudentInCourseException(String courseID) {
 		super();
 		this.courseID = courseID;
 	}
@@ -37,7 +37,7 @@ public class CourseNotFoundException extends Exception {
 	
 	@Override
 	public String getMessage() {
-		return "CourseID: " + courseID + " is not present in course catalogue!";
+		return "No student in CourseID: " + courseID + "!";
 	}
 
 }

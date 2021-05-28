@@ -3,6 +3,7 @@
  */
 package com.flipkart.restcontroller;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +27,7 @@ import com.flipkart.exception.CourseAlreadyRegisteredException;
 import com.flipkart.exception.CourseLimitExceededException;
 import com.flipkart.exception.CourseNotAssignedException;
 import com.flipkart.exception.CourseNotFoundException;
+import com.flipkart.exception.NoStudentInCourseException;
 import com.flipkart.exception.StudentNotRegisteredException;
 import com.flipkart.service.ProfessorInterface;
 import com.flipkart.service.ProfessorOperation;
@@ -46,7 +48,8 @@ import com.flipkart.service.ProfessorOperation;
 			
 			try {
 				return pI.viewCourseStudents(courseId, constants.SemesterID);
-			} catch (CourseNotFoundException e) {
+			} catch (SQLException | NoStudentInCourseException e) {
+				// TODO Auto-generated catch block
 				return null;
 			}
 			
@@ -86,7 +89,7 @@ import com.flipkart.service.ProfessorOperation;
 			}
 			catch(Exception ex)
 			{
-				return Response.status(500).entity( "Something went wrong, Please Try Again ! ").build();
+				return Response.status(500).entity(ex.getMessage()).build();
 			}
 			return Response.status(200).entity( "Grade updated for student: "+studentId).build();
 			
@@ -108,7 +111,7 @@ import com.flipkart.service.ProfessorOperation;
 			}
 			catch(Exception ex)
 			{
-				return Response.status(500).entity( "Something went wrong, Please Try Again ! ").build();
+				return Response.status(500).entity(ex.getMessage()).build();
 			}
 			return Response.status(200).entity( "You've been Registered !").build();
 			
