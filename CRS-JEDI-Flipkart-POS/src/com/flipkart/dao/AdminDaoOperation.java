@@ -236,9 +236,7 @@ public class AdminDaoOperation implements AdminDaoInterface {
 			System.out.println(row + " course added.");
 			
 		} catch (SQLException e) {
-
 			logger.error(e.getMessage());
-
 		}
 		
 	}

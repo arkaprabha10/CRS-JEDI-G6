@@ -19,13 +19,14 @@ import com.flipkart.exception.StudentNotApprovedException;
 import com.flipkart.exception.StudentNotRegisteredException;
 import com.flipkart.service.AdminInterface;
 import com.flipkart.service.AdminOperation;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 public class AdminClient {
+
+    private static final Logger logger = LogManager.getLogger(AdminClient.class);
     private Scanner sc = new Scanner(System.in);
-//    AdminOperation ao = new AdminOperation();
-    	
 	AdminInterface ao = AdminOperation.getInstance();
-//	NotificationInterface notificationInterface=NotificationOperation.getInstance();
 
     public void createAdminMenu(String username) {
         try {
@@ -70,7 +71,6 @@ public class AdminClient {
                     	approvePendingStudentAccounts();
                     	break;
                     case 8:
-//                    	System.exit(0);
                         return;
                     default:
                         System.out.println("Invalid input");
@@ -78,7 +78,7 @@ public class AdminClient {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
 
@@ -98,8 +98,6 @@ public class AdminClient {
 		sc.nextLine();
 		
 		ao.approveStudentAccount(studentID);
-		
-		
 	}
 
 	private void viewCourseStudentList() {
@@ -127,19 +125,18 @@ public class AdminClient {
                 System.out.println("Invalid input");
         }
 
-        
-//        AdminOperation Ao= new AdminOperation();
         HashMap<String,ArrayList<Integer> > CourseStudentList = ao.viewCourseStudentList (courseID,constants.SemesterID,viewAll);
         System.out.println("+-------------------------------------+");
+
         CourseStudentList.entrySet().forEach(entry -> {
     	    System.out.println("| Course ID : " + entry.getKey());
     	    System.out.print("| Students Enrolled : \n| " );
     	    for(Integer stID : entry.getValue()) {
     	    	System.out.print(stID.toString()+"\t");
     	    }
+
     	    System.out.println();
     	    System.out.println("+-------------------------------------+");
-//    	    System.out.println();
     	});
         
     }
@@ -153,7 +150,7 @@ public class AdminClient {
             ao.removeProfessor(professorID);                            
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
 
@@ -196,33 +193,22 @@ public class AdminClient {
             Prof.setJoiningYear(joiningYear);
             
             ao.addProfessor(Prof);
-            //done : create professor obj, and add to db
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
 
-    private void approveStudentRegistration() throws FeesPendingException, StudentNotApprovedException {
+    private void approveStudentRegistration() {
         int studentID;
         System.out.println("Enter student ID: ");
         studentID = sc.nextInt();
-        
-//        AdminOperation Ao= new AdminOperation();
+
         try {
 			ao.approveStudentRegistration(studentID,constants.SemesterID);
-		} catch (StudentNotRegisteredException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (FeesPendingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (StudentNotApprovedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
-        
-        // to do : approve student reg logic
     }
 
     private void generateReportCard() {
@@ -232,13 +218,12 @@ public class AdminClient {
         ReportCard R = new ReportCard();
 		try {
 			R = ao.generateReportCard(studentID);
-		} catch (GradeNotAddedException | StudentNotApprovedException | FeesPendingException e) {
-			// TODO Auto-generated catch block
-//			e.printStackTrace();
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
+
 		if(R.getSpi() > 0)
         System.out.println("Student ID : "+studentID+"    SPI : "+ R.getSpi());
-        // to do : get student courses and grade, and generate report card
     }
 
     private void editCourseList() {
@@ -284,18 +269,9 @@ public class AdminClient {
         
         try {
 			ao.removeCourse(courseID);
-		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (CourseNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (CourseNotDeletedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
-        
-        // to do : remove course from db
     }
 
     private void addCourse() {
@@ -315,11 +291,8 @@ public class AdminClient {
             
             ao.addCourse(course_name, courseID, offeredSemester);
 
-            // to do : create course object, update course in db
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
     }
 }

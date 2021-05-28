@@ -52,7 +52,7 @@ public class AdminOperation implements AdminInterface {
 
 		try {
 			ado.approveStudentRegistration(studentId,semesterId);
-		} catch (FeesPendingException | StudentNotApprovedException e) {
+		} catch (FeesPendingException | StudentNotApprovedException | StudentNotRegisteredException e) {
 			logger.error(e.getMessage());
 		}
 	}
@@ -60,32 +60,49 @@ public class AdminOperation implements AdminInterface {
 	@Override
 	public void addProfessor(Professor professor) {
 
-		ado.addProfessor(professor);
+		try {
+			ado.addProfessor(professor);
+		} catch (ProfessorAlreadyPresentException e) {
+			logger.error(e.getMessage());
+		}
 	}
 
 	@Override
 	public void removeProfessor(int professorID) {
 
-		ado.removeProfessor(professorID);
+		try {
+			ado.removeProfessor(professorID);
+		} catch (ProfessorNotFoundException e) {
+			logger.error(e.getMessage());
+		}
 	}
 
 
 	@Override
 	public void removeCourse(String courseID) {
 
-		ado.removeCourse(courseID);
+		try {
+			ado.removeCourse(courseID);
+		} catch (CourseNotFoundException e) {
+			logger.error(e.getMessage());
+		}
 	}
 
 	@Override
 	public void addCourse(String course_name, String courseID, int semester) {
-		// TODO Auto-generated method stub
-		Course newCourse = new Course();
-		newCourse.setCoursename(course_name);
-		newCourse.setCourseID(courseID);
-		newCourse.setOfferedSemester(semester);
-		newCourse.setAvailableSeats(10);
 
-		ado.addCourse(newCourse);
+		try {
+			Course newCourse = new Course();
+			newCourse.setCoursename(course_name);
+			newCourse.setCourseID(courseID);
+			newCourse.setOfferedSemester(semester);
+			newCourse.setAvailableSeats(10);
+
+			ado.addCourse(newCourse);
+		} catch (CourseAlreadyPresentException e) {
+			logger.error(e.getMessage());
+		}
+
 	}
 
 	
@@ -99,11 +116,10 @@ public class AdminOperation implements AdminInterface {
 	public ReportCard generateReportCard(int studentID) {
 
 		ReportCard R = new ReportCard();
+
 		try {
-
 			R= ado.generateReportCard(studentID);
-
-		} catch (StudentNotApprovedException e) {
+		} catch (GradeNotAddedException | StudentNotApprovedException | FeesPendingException e) {
 			logger.error(e.getMessage());
 		}
 		return R;

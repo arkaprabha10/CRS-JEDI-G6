@@ -31,12 +31,12 @@ public interface AdminInterface {
 	 * @throws StudentNotApprovedException 
 	 * @throws FeesPendingException 
 	 */
-	public void approveStudentRegistration(int studentId,int semesterId) throws StudentNotRegisteredException, StudentNotRegisteredException, FeesPendingException, StudentNotApprovedException;
+	public void approveStudentRegistration(int studentId,int semesterId);
 	
 	/**
 	 * @param professor
 	 */
-	public void addProfessor(Professor professor) throws ProfessorNotAddedException;
+	public void addProfessor(Professor professor);
 	
 	/**
 	 * @param professor
@@ -49,19 +49,19 @@ public interface AdminInterface {
 	 * @throws StudentNotApprovedException 
 	 * @throws FeesPendingException 
 	 */
-	public ReportCard generateReportCard(int studentID) throws GradeNotAddedException, StudentNotApprovedException, FeesPendingException;
+	public ReportCard generateReportCard(int studentID);
 	
 	/**
 	 * @param courseID
 	 * @param courseCatalog
 	 */
-	public void removeCourse(String courseID) throws CourseNotFoundException, CourseNotDeletedException;
+	public void removeCourse(String courseID);
 	
 	/**
 	 * @param courseID
 	 * @param courseCatalog
 	 */
-	public void addCourse(String course_name, String courseID, int semester) throws CourseAlreadyPresentException;
+	public void addCourse(String course_name, String courseID, int semester);
 
 	public HashMap<String, ArrayList<Integer>> viewCourseStudentList(String courseID, int semester, Boolean viewAll);
 
