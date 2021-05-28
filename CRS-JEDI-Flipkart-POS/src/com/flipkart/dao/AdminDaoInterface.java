@@ -18,6 +18,7 @@ import com.flipkart.exception.CourseNotFoundException;
 import com.flipkart.exception.FeesPendingException;
 import com.flipkart.exception.GradeNotAddedException;
 import com.flipkart.exception.ProfessorNotAddedException;
+import com.flipkart.exception.ProfessorNotRegisteredException;
 import com.flipkart.exception.StudentNotApprovedException;
 import com.flipkart.exception.StudentNotRegisteredException;
 
@@ -44,7 +45,7 @@ public interface AdminDaoInterface {
 	 * @param professor
 	 */
 
-	public void removeProfessor(int professorID);
+	public void removeProfessor(int professorID) throws ProfessorNotRegisteredException;
 
 	
 	/**
@@ -63,7 +64,7 @@ public interface AdminDaoInterface {
 	 * @param courseCatalog
 	 */
 
-	public void removeCourse(String courseID);
+	public void removeCourse(String courseID) throws CourseNotFoundException;
 
 	
 	/**

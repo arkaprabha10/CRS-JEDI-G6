@@ -78,26 +78,28 @@ public class AdminClient {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
         }
     }
 
     private void approvePendingStudentAccounts() {
 		
     	List<Student> pendingStudents = ao.getPendingStudentAccountsList();
-    	
-    	System.out.println("List of Students with Pending Account Approval : ");
-    	System.out.println();
-    	System.out.println("Student ID\t Name\t Department\t Joining Year\t Contact Number");
-    	for(Student st: pendingStudents) {
-    		System.out.println(st.getStudentID()+"\t"+st.getName()+"\t"+st.getDepartment()+"\t"+st.getJoiningYear()+"\t"+st.getContactNumber());
+    	if(!pendingStudents.isEmpty()) {
+    		System.out.println("List of Students with Pending Account Approval : ");
+        	System.out.println();
+        	System.out.println("Student ID\t Name\t Department\t Joining Year\t Contact Number");
+        	for(Student st: pendingStudents) {
+        		System.out.println(st.getStudentID()+"\t"+st.getName()+"\t"+st.getDepartment()+"\t"+st.getJoiningYear()+"\t"+st.getContactNumber());
+        	}
+        	
+        	System.out.println("\n Enter the Student ID for the Student Account you want to approve : ");
+    		Integer studentID = sc.nextInt();
+    		sc.nextLine();
+    		
+    		ao.approveStudentAccount(studentID);
     	}
     	
-    	System.out.println("\n Enter the Student ID for the Student Account you want to approve : ");
-		Integer studentID = sc.nextInt();
-		sc.nextLine();
-		
-		ao.approveStudentAccount(studentID);
 		
 		
 	}
@@ -196,7 +198,6 @@ public class AdminClient {
             Prof.setJoiningYear(joiningYear);
             
             ao.addProfessor(Prof);
-            //done : create professor obj, and add to db
 
         } catch (Exception e) {
 //            e.printStackTrace();
@@ -222,7 +223,7 @@ public class AdminClient {
 			e.printStackTrace();
 		}
         
-        // to do : approve student reg logic
+        
     }
 
     private void generateReportCard() {
@@ -238,7 +239,9 @@ public class AdminClient {
 		}
 		if(R.getSpi() > 0)
         System.out.println("Student ID : "+studentID+"    SPI : "+ R.getSpi());
-        // to do : get student courses and grade, and generate report card
+		else {
+			System.out.println("Report Card not generated!!");
+		}
     }
 
     private void editCourseList() {

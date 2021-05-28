@@ -65,16 +65,29 @@ public class AdminOperation implements AdminInterface {
 
 	@Override
 	public void removeProfessor(int professorID) {
-
-		ado.removeProfessor(professorID);
+		try {
+		
+			ado.removeProfessor(professorID);
+		}
+		catch(ProfessorNotRegisteredException e) {
+			logger.error(e.getMessage());
+		}
 	}
-
 
 	@Override
 	public void removeCourse(String courseID) {
 
-		ado.removeCourse(courseID);
+		try {
+
+			ado.removeCourse(courseID);
+
+		}
+
+		catch(CourseNotFoundException e) {
+			logger.error(e.getMessage());
+		}
 	}
+	
 
 	@Override
 	public void addCourse(String course_name, String courseID, int semester) {

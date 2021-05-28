@@ -18,6 +18,6 @@ private Integer professorId;
 	}
 	
 	public String getMessage() {
-		return "Professor with id: " + professorId + "doesnt have proper details!";
+		return "Professor with id: " + professorId + " doesnt have proper details!";
 	}
 }
